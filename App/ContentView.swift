@@ -27,7 +27,7 @@ struct ContentView: View {
                 SetupStep(
                     number: 1,
                     title: "Enable the extension",
-                    description: "Open System Settings > Privacy & Security > Extensions > Quick Look, then enable PreviewMD."
+                    description: "Open System Settings > General > Login Items & Extensions > Extensions > Quick Look, then enable PreviewMD."
                 )
 
                 SetupStep(

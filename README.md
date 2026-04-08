@@ -10,7 +10,7 @@ Press spacebar on a `.md` file in Finder and see frontmatter rendered as a clean
 curl -sSL github.com/gas217/preview-md/releases/latest/download/install.sh | sh
 ```
 
-Then enable in **System Settings > Privacy & Security > Extensions > Quick Look**.
+Then enable in **System Settings > General > Login Items & Extensions > Extensions > Quick Look**.
 
 ## Features
 
