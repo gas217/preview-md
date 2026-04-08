@@ -1,12 +1,12 @@
 import XCTest
 
-final class ReeveTests: XCTestCase {
+final class FrontmatterRenderTests: XCTestCase {
 
-    func testReeveTaskFile() throws {
+    func testFrontmatterTaskFile() throws {
         let path = URL(fileURLWithPath: #file)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent("TestFiles/reeve_task.md")
+            .appendingPathComponent("TestFiles/frontmatter_task.md")
 
         let content = try String(contentsOf: path, encoding: .utf8)
         let html = MarkdownRenderer.render(content)
@@ -55,7 +55,7 @@ final class ReeveTests: XCTestCase {
         XCTAssertFalse(html.contains("<p>---</p>"), "No raw frontmatter delimiters in content")
     }
 
-    func testReeveMinimalTask() {
+    func testFrontmatterMinimalTask() {
         let input = """
         ---
         id: t-001
@@ -70,7 +70,7 @@ final class ReeveTests: XCTestCase {
         XCTAssertTrue(html.contains("t-001"))
     }
 
-    func testReeveCompletedTask() {
+    func testFrontmatterCompletedTask() {
         let input = """
         ---
         title: Done task
@@ -102,7 +102,7 @@ final class ReeveTests: XCTestCase {
         XCTAssertFalse(html.contains("<dt>created</dt>"), "Created not in custom fields")
     }
 
-    func testReeveBlockedTask() {
+    func testFrontmatterBlockedTask() {
         let input = """
         ---
         title: Blocked task
