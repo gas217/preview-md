@@ -118,4 +118,21 @@ final class PerformanceTests: XCTestCase {
         XCTAssertTrue(html.contains("alt=\"Alt text\""), "Alt text present")
         XCTAssertTrue(html.contains("title=\"Title\""), "Title present")
     }
+
+    func testRelativeImagePath() {
+        let input = "![Screenshot](./assets/screenshot.png)"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("src=\"./assets/screenshot.png\""), "Relative path preserved")
+    }
+
+    func testAbsoluteFileImagePath() {
+        let input = "![Photo](file:///Users/test/photo.jpg)"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("src=\"file:///Users/test/photo.jpg\""), "Absolute file path preserved")
+    }
+
+    func testCSPAllowsLocalImages() {
+        let html = MarkdownRenderer.render("# test")
+        XCTAssertTrue(html.contains("img-src file: data:"), "CSP allows file: and data: images")
+    }
 }
