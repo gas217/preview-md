@@ -32,6 +32,7 @@
 		DEE0387E2ECFFD821F9C51DA /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 707C457C669AB75FF4F6EAD9 /* Yams */; };
 		E41FD7EC705A96B3FF90A785 /* PreviewMDQuickLook.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5E024DEA8EC7564FA12FF8D2 /* PreviewMDQuickLook.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EBE207D0FA84DBC37A659119 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A591CC9DF6694FB8570F7132 /* PreviewViewController.swift */; };
+		F2BDE5623C4132030582E96F /* EdgeCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52440575EFDDE44C1E478115 /* EdgeCaseTests.swift */; };
 		F98D58774F03382A7FB8B0D1 /* SecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D06D673012E855AA03509D5 /* SecurityTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,7 @@
 		385C277257CA6E41325FAB5E /* PreviewMD.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PreviewMD.entitlements; sourceTree = "<group>"; };
 		3981BDC6EE02160491C71C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		48D257C31A5F1C6D5F91C1D5 /* PreviewMDQuickLook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PreviewMDQuickLook.entitlements; sourceTree = "<group>"; };
+		52440575EFDDE44C1E478115 /* EdgeCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeCaseTests.swift; sourceTree = "<group>"; };
 		5E024DEA8EC7564FA12FF8D2 /* PreviewMDQuickLook.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PreviewMDQuickLook.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D06D673012E855AA03509D5 /* SecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityTests.swift; sourceTree = "<group>"; };
 		7199341AAC078B6346ABCA8F /* PreviewMDTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PreviewMDTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,6 +148,7 @@
 		81EC849377C44925494EEB99 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				52440575EFDDE44C1E478115 /* EdgeCaseTests.swift */,
 				1AB6CCDAF7E33E1BF1DC623E /* MarkdownRendererTests.swift */,
 				87F286B07971A2B4CB87AFDC /* PerformanceTests.swift */,
 				C8637625F395FD0D2B924A0E /* RenderOutputTest.swift */,
@@ -306,6 +309,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2BDE5623C4132030582E96F /* EdgeCaseTests.swift in Sources */,
 				147CCAC9AFF962EAC3CE3815 /* FrontmatterParser.swift in Sources */,
 				BEB62B9B89F1F120510301CD /* HTMLConverter.swift in Sources */,
 				0188BAA558BF3B2E85BA2B21 /* HTMLTemplate.swift in Sources */,

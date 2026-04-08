@@ -217,8 +217,24 @@ struct HTMLConverter: MarkupVisitor {
 
 }
 
+extension Markup {
+    /// Recursively extract all text content from any markup node
+    var recursiveText: String {
+        if let text = self as? Text {
+            return text.plainText
+        }
+        if let code = self as? InlineCode {
+            return code.code
+        }
+        if let softBreak = self as? SoftBreak {
+            return " "
+        }
+        return children.map { $0.recursiveText }.joined()
+    }
+}
+
 extension Heading {
     var plainText: String {
-        children.compactMap { ($0 as? Text)?.plainText }.joined(separator: " ")
+        recursiveText
     }
 }

@@ -48,8 +48,9 @@ struct ParsedMarkdown {
 
 enum FrontmatterParser {
     static func parse(_ input: String) -> ParsedMarkdown {
-        // Strip UTF-8 BOM if present
-        let cleaned = input.hasPrefix("\u{FEFF}") ? String(input.dropFirst()) : input
+        // Strip UTF-8 BOM and normalize line endings
+        var cleaned = input.hasPrefix("\u{FEFF}") ? String(input.dropFirst()) : input
+        cleaned = cleaned.replacingOccurrences(of: "\r\n", with: "\n").replacingOccurrences(of: "\r", with: "\n")
         let trimmed = cleaned.trimmingCharacters(in: .whitespacesAndNewlines)
 
         guard trimmed.hasPrefix("---") else {
