@@ -10,10 +10,6 @@ struct HTMLConverter: MarkupVisitor {
 
     // MARK: - Block Elements
 
-    mutating func visitDocument(_ document: Document) -> String {
-        document.children.map { visit($0) }.joined()
-    }
-
     mutating func visitHeading(_ heading: Heading) -> String {
         let level = heading.level
         let id = heading.plainText
@@ -221,7 +217,7 @@ extension Markup {
         if let code = self as? InlineCode {
             return code.code
         }
-        if let softBreak = self as? SoftBreak {
+        if self is SoftBreak {
             return " "
         }
         return children.map { $0.recursiveText }.joined()
