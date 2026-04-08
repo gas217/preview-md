@@ -10,7 +10,15 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         config.preferences.setValue(false, forKey: "javaScriptCanOpenWindowsAutomatically")
 
         webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600), configuration: config)
+
+        // Transparent background — the HTML body provides its own background color
+        // matching light/dark mode via prefers-color-scheme
+        if #available(macOS 13.3, *) {
+            webView.isInspectable = false
+            webView.underPageBackgroundColor = .clear
+        }
         webView.setValue(false, forKey: "drawsBackground")
+
         self.view = webView
     }
 
