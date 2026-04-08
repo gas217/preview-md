@@ -194,16 +194,11 @@ struct HTMLConverter: MarkupVisitor {
     // MARK: - Helpers
 
     private func escapeHTML(_ string: String) -> String {
-        string
-            .replacingOccurrences(of: "&", with: "&amp;")
-            .replacingOccurrences(of: "<", with: "&lt;")
-            .replacingOccurrences(of: ">", with: "&gt;")
-            .replacingOccurrences(of: "\"", with: "&quot;")
-            .replacingOccurrences(of: "'", with: "&#39;")
+        HTMLUtils.escapeHTML(string)
     }
 
     private func escapeAttribute(_ string: String) -> String {
-        escapeHTML(string)
+        HTMLUtils.escapeHTML(string)
     }
 
     private func isSafeURL(_ url: String) -> Bool {
