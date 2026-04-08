@@ -84,6 +84,24 @@ final class ReeveTests: XCTestCase {
         XCTAssertTrue(html.contains("badge-gray"), "Low priority gets gray badge")
     }
 
+    func testMultipleDateFields() {
+        let input = """
+        ---
+        title: Multi-date task
+        created: 2025-01-10
+        modified: 2025-01-15
+        due: 2025-02-01
+        ---
+        Content
+        """
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("created:"), "Created date label shown")
+        XCTAssertTrue(html.contains("modified:"), "Modified date label shown")
+        XCTAssertTrue(html.contains("due:"), "Due date label shown")
+        // Dates should NOT appear in the custom fields section
+        XCTAssertFalse(html.contains("<dt>created</dt>"), "Created not in custom fields")
+    }
+
     func testReeveBlockedTask() {
         let input = """
         ---

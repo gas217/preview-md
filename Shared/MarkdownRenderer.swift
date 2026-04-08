@@ -46,8 +46,9 @@ enum MarkdownRenderer {
             metaItems.append("<span class=\"fm-badge \(priorityClass)\">Priority: \(escapeHTML(priority))</span>")
         }
 
-        if let date = fm.date {
-            metaItems.append("<span class=\"fm-date\">\(escapeHTML(date))</span>")
+        for dateEntry in fm.dates {
+            let label = dateEntry.label == "date" ? "" : "\(escapeHTML(dateEntry.label)): "
+            metaItems.append("<span class=\"fm-date\">\(label)\(escapeHTML(dateEntry.value))</span>")
         }
 
         if !fm.tags.isEmpty {
@@ -60,7 +61,8 @@ enum MarkdownRenderer {
         }
 
         // Render remaining fields as a definition list
-        let skipFields: Set<String> = ["title", "status", "priority", "date", "tags"]
+        let dateFieldNames: Set<String> = ["date", "created", "modified", "updated", "due", "deadline", "created_at", "updated_at", "published", "completed"]
+        let skipFields = Set(["title", "status", "priority", "tags"]).union(dateFieldNames)
         let otherFields = fm.fields.filter { !skipFields.contains($0.key) }
 
         if !otherFields.isEmpty {

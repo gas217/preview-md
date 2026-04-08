@@ -6,9 +6,14 @@ struct Frontmatter {
     let title: String?
     let status: String?
     let priority: String?
-    let date: String?
+    let dates: [(label: String, value: String)]
     let tags: [String]
     let raw: [String: Any]
+
+    private static let dateFields: Set<String> = [
+        "date", "created", "modified", "updated", "due", "deadline",
+        "created_at", "updated_at", "published", "completed"
+    ]
 
     init(raw: [String: Any]) {
         self.raw = raw
@@ -17,15 +22,15 @@ struct Frontmatter {
         self.status = raw["status"] as? String
         self.priority = raw["priority"] as? String
 
-        if let dateVal = raw["date"] as? String {
-            self.date = dateVal
-        } else if let dateVal = raw["date"] as? Date {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            self.date = formatter.string(from: dateVal)
-        } else {
-            self.date = nil
+        // Collect all date fields
+        var foundDates: [(label: String, value: String)] = []
+        for key in raw.keys.sorted() {
+            guard Self.dateFields.contains(key) else { continue }
+            if let formatted = Self.formatDateValue(raw[key]) {
+                foundDates.append((label: key, value: formatted))
+            }
         }
+        self.dates = foundDates
 
         if let tagsArray = raw["tags"] as? [String] {
             self.tags = tagsArray
@@ -36,8 +41,43 @@ struct Frontmatter {
         }
     }
 
+    /// Back-compat: first date value
+    var date: String? {
+        dates.first?.value
+    }
+
     var isEmpty: Bool {
         raw.isEmpty
+    }
+
+    private static func formatDateValue(_ value: Any?) -> String? {
+        guard let value = value else { return nil }
+        if let date = value as? Date {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .none
+            return formatter.string(from: date)
+        }
+        if let string = value as? String, !string.isEmpty {
+            // Try to parse ISO date strings for nicer formatting
+            let isoFormatter = ISO8601DateFormatter()
+            isoFormatter.formatOptions = [.withFullDate]
+            if let date = isoFormatter.date(from: string) {
+                let display = DateFormatter()
+                display.dateStyle = .medium
+                return display.string(from: date)
+            }
+            // Try datetime
+            isoFormatter.formatOptions = [.withInternetDateTime]
+            if let date = isoFormatter.date(from: string) {
+                let display = DateFormatter()
+                display.dateStyle = .medium
+                display.timeStyle = .short
+                return display.string(from: date)
+            }
+            return string
+        }
+        return nil
     }
 }
 
