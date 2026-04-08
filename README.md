@@ -7,7 +7,7 @@ Press spacebar on a `.md` file in Finder and see frontmatter rendered as a clean
 ## Install
 
 ```bash
-curl -sSL raw.githubusercontent.com/gas217/preview-md/master/install.sh | sh
+curl -sSL github.com/gas217/preview-md/releases/latest/download/install.sh | sh
 ```
 
 Then enable in **System Settings > Privacy & Security > Extensions > Quick Look**.
