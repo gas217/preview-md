@@ -53,22 +53,27 @@ struct Frontmatter {
     private static func formatDateValue(_ value: Any?) -> String? {
         guard let value = value else { return nil }
         if let date = value as? Date {
+            // Yams parses date-only values as midnight UTC — format in UTC to avoid day shift
             let formatter = DateFormatter()
             formatter.dateStyle = .medium
             formatter.timeStyle = .none
+            formatter.timeZone = TimeZone(identifier: "UTC")
             return formatter.string(from: date)
         }
         if let string = value as? String, !string.isEmpty {
             // Try to parse ISO date strings for nicer formatting
             let isoFormatter = ISO8601DateFormatter()
             isoFormatter.formatOptions = [.withFullDate]
+            isoFormatter.timeZone = TimeZone(identifier: "UTC")
             if let date = isoFormatter.date(from: string) {
                 let display = DateFormatter()
                 display.dateStyle = .medium
+                display.timeZone = TimeZone(identifier: "UTC")
                 return display.string(from: date)
             }
-            // Try datetime
+            // Try datetime — use local TZ since time is explicit
             isoFormatter.formatOptions = [.withInternetDateTime]
+            isoFormatter.timeZone = TimeZone.current
             if let date = isoFormatter.date(from: string) {
                 let display = DateFormatter()
                 display.dateStyle = .medium

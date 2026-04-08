@@ -32,4 +32,17 @@ final class RenderOutputTest: XCTestCase {
         print("HTML output written to: /tmp/previewmd_test_output.html")
         print("HTML size: \(html.count) characters")
     }
+
+    func testRenderReeveToFile() throws {
+        let path = URL(fileURLWithPath: #file)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("TestFiles/reeve_task.md")
+
+        let content = try String(contentsOf: path, encoding: .utf8)
+        let html = MarkdownRenderer.render(content)
+        let outputPath = URL(fileURLWithPath: "/tmp/previewmd_reeve_output.html")
+        try html.write(to: outputPath, atomically: true, encoding: .utf8)
+        print("Reeve HTML written to: /tmp/previewmd_reeve_output.html")
+    }
 }
