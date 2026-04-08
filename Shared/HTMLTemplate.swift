@@ -459,28 +459,51 @@ enum HTMLTemplate {
             const langMatch = block.className.match(/language-(\\w+)/);
             if (!langMatch) return;
             const lang = langMatch[1].toLowerCase();
+            if (!keywords[lang]) return;
 
-            let code = block.innerHTML;
+            // Use textContent to avoid HTML entity issues, then re-escape
+            const raw = block.textContent;
+            const tokens = [];
 
-            const stored = [];
-            function store(match) {
-                stored.push(match);
-                return '%%STORED' + (stored.length - 1) + '%%';
+            // Tokenize: extract comments, strings, then highlight rest
+            const combined = new RegExp(
+                '(' + commentRegex.source + ')|(' + stringRegex.source + ')', 'gm'
+            );
+
+            let lastIdx = 0;
+            let match;
+            combined.lastIndex = 0;
+            while ((match = combined.exec(raw)) !== null) {
+                if (match.index > lastIdx) {
+                    tokens.push({type: 'code', text: raw.slice(lastIdx, match.index)});
+                }
+                if (match[1]) {
+                    tokens.push({type: 'comment', text: match[0]});
+                } else {
+                    tokens.push({type: 'string', text: match[0]});
+                }
+                lastIdx = combined.lastIndex;
+            }
+            if (lastIdx < raw.length) {
+                tokens.push({type: 'code', text: raw.slice(lastIdx)});
             }
 
-            code = code.replace(commentRegex, function(m) {
-                return '<span class="hljs-comment">' + store(m).replace(/<span class="hljs-comment">|<\\/span>/g, '') + '</span>';
-            });
-
-            code = code.replace(stringRegex, '<span class="hljs-string">$1</span>');
-
-            if (keywords[lang]) {
-                code = code.replace(keywords[lang], '<span class="hljs-keyword">$1</span>');
+            function esc(s) {
+                return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
             }
 
-            code = code.replace(numberRegex, '<span class="hljs-number">$1</span>');
+            const kw = keywords[lang];
+            let result = tokens.map(function(t) {
+                const escaped = esc(t.text);
+                if (t.type === 'comment') return '<span class="hljs-comment">' + escaped + '</span>';
+                if (t.type === 'string') return '<span class="hljs-string">' + escaped + '</span>';
+                // Highlight keywords and numbers in code tokens
+                return escaped
+                    .replace(kw, '<span class="hljs-keyword">$1</span>')
+                    .replace(numberRegex, '<span class="hljs-number">$1</span>');
+            }).join('');
 
-            block.innerHTML = code;
+            block.innerHTML = result;
         });
     })();
     """
