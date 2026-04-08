@@ -1,0 +1,106 @@
+name: PreviewMD
+options:
+  bundleIdPrefix: com.previewmd
+  deploymentTarget:
+    macOS: "14.0"
+  minimumXcodeGenVersion: "2.38.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+
+schemes:
+  PreviewMD:
+    build:
+      targets:
+        PreviewMD: all
+        PreviewMDQuickLook: all
+        PreviewMDTests: [test]
+    test:
+      targets:
+        - PreviewMDTests
+
+packages:
+  swift-markdown:
+    url: https://github.com/swiftlang/swift-markdown
+    from: "0.4.0"
+  Yams:
+    url: https://github.com/jpsim/Yams
+    from: "5.1.0"
+
+targets:
+  PreviewMD:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+      - path: Shared
+    resources:
+      - path: Resources
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - target: PreviewMDQuickLook
+        embed: true
+        codeSign: true
+      - package: swift-markdown
+        product: Markdown
+      - package: Yams
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.previewmd.PreviewMD
+        PRODUCT_NAME: PreviewMD
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_FILE: App/Info.plist
+        CODE_SIGN_ENTITLEMENTS: App/PreviewMD.entitlements
+        SWIFT_VERSION: "5.9"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        CODE_SIGN_IDENTITY: "-"
+        COMBINE_HIDPI_IMAGES: true
+
+  PreviewMDQuickLook:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: Extension
+      - path: Shared
+    resources:
+      - path: Resources
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - package: swift-markdown
+        product: Markdown
+      - package: Yams
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.previewmd.PreviewMD.QuickLook
+        PRODUCT_NAME: PreviewMDQuickLook
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_FILE: Extension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Extension/PreviewMDQuickLook.entitlements
+        SWIFT_VERSION: "5.9"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        CODE_SIGN_IDENTITY: "-"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"
+
+  PreviewMDTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests
+      - path: Shared
+    resources:
+      - path: Resources
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - package: swift-markdown
+        product: Markdown
+      - package: Yams
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.previewmd.PreviewMDTests
+        SWIFT_VERSION: "5.9"
+        MACOSX_DEPLOYMENT_TARGET: "14.0"
+        GENERATE_INFOPLIST_FILE: "YES"
