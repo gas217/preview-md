@@ -1,34 +1,18 @@
-import Cocoa
-import Quartz
-import WebKit
+import Foundation
+import QuickLookUI
+import UniformTypeIdentifiers
 
-class PreviewViewController: NSViewController, QLPreviewingController {
-    private var webView: WKWebView!
+class PreviewProvider: QLPreviewProvider {
+    func providePreview(for request: QLFilePreviewRequest) async throws -> QLPreviewReply {
+        let html = try MarkdownRenderer.render(fileAt: request.fileURL)
+        let data = Data(html.utf8)
 
-    override func loadView() {
-        let config = WKWebViewConfiguration()
-        config.preferences.setValue(false, forKey: "javaScriptCanOpenWindowsAutomatically")
-
-        webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600), configuration: config)
-
-        // Transparent background — the HTML body provides its own background color
-        // matching light/dark mode via prefers-color-scheme
-        if #available(macOS 13.3, *) {
-            webView.isInspectable = false
-            webView.underPageBackgroundColor = .clear
+        let reply = QLPreviewReply(
+            dataOfContentType: UTType.html,
+            contentSize: CGSize(width: 800, height: 600)
+        ) { _ in
+            return data
         }
-        webView.setValue(false, forKey: "drawsBackground")
-
-        self.view = webView
-    }
-
-    func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
-        do {
-            let html = try MarkdownRenderer.render(fileAt: url)
-            webView.loadHTMLString(html, baseURL: url.deletingLastPathComponent())
-            handler(nil)
-        } catch {
-            handler(error)
-        }
+        return reply
     }
 }

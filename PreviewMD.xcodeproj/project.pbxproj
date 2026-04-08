@@ -10,8 +10,11 @@
 		0188BAA558BF3B2E85BA2B21 /* HTMLTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AB33B21266EE578C0F1E19 /* HTMLTemplate.swift */; };
 		0D68D9CDE0B66AC84CE514AE /* FrontmatterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */; };
 		147CCAC9AFF962EAC3CE3815 /* FrontmatterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */; };
+		1D60496746E2DEAFF37A007D /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		22B54D361CF3A0CCDC57E615 /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
+		43D185B01CCB13F51896FD82 /* ReeveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08823775D308688FD622CB16 /* ReeveTests.swift */; };
 		4443B10326EE7FC58A31536B /* HTMLTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AB33B21266EE578C0F1E19 /* HTMLTemplate.swift */; };
+		46115B7B9E34A4E1B65CA883 /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		484A43C9EF3C9186579A4F4A /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F286B07971A2B4CB87AFDC /* PerformanceTests.swift */; };
 		514A1CBFFDAB6FA237C1237E /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
 		55079A275F66648D4C827784 /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2D51C2C3AEA2024571B64E49 /* Markdown */; };
@@ -19,6 +22,7 @@
 		5F1997E59E2E5293FC0B77FE /* HTMLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE95DD3ABC5FB85FBC042DFC /* HTMLConverter.swift */; };
 		71D46F12B23DE05D0FFD06A4 /* FrontmatterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */; };
 		738C38ADAFED8A4AFA61382B /* MarkdownRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB6CCDAF7E33E1BF1DC623E /* MarkdownRendererTests.swift */; };
+		77A1A961C292BF21A0AF2351 /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		868B9E61A6AE8EEDB098AE71 /* RenderOutputTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8637625F395FD0D2B924A0E /* RenderOutputTest.swift */; };
 		9A044A17CE1F03DE696356E9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2C10BF661A8F458138B3C1 /* ContentView.swift */; };
 		A05A634F5519036CAD1C622D /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C59AC12125CCE9C6E7137C46 /* Yams */; };
@@ -61,6 +65,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		08823775D308688FD622CB16 /* ReeveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReeveTests.swift; sourceTree = "<group>"; };
 		128298E0D85817EAFE1DBE08 /* PreviewMD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PreviewMD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB6CCDAF7E33E1BF1DC623E /* MarkdownRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownRendererTests.swift; sourceTree = "<group>"; };
 		3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontmatterParser.swift; sourceTree = "<group>"; };
@@ -75,6 +80,7 @@
 		A591CC9DF6694FB8570F7132 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownRenderer.swift; sourceTree = "<group>"; };
 		C226C450B376D8A60EE3A180 /* PreviewMDApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewMDApp.swift; sourceTree = "<group>"; };
+		C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLUtils.swift; sourceTree = "<group>"; };
 		C7AB33B21266EE578C0F1E19 /* HTMLTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLTemplate.swift; sourceTree = "<group>"; };
 		C8637625F395FD0D2B924A0E /* RenderOutputTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderOutputTest.swift; sourceTree = "<group>"; };
 		DF2C10BF661A8F458138B3C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -151,6 +157,7 @@
 				52440575EFDDE44C1E478115 /* EdgeCaseTests.swift */,
 				1AB6CCDAF7E33E1BF1DC623E /* MarkdownRendererTests.swift */,
 				87F286B07971A2B4CB87AFDC /* PerformanceTests.swift */,
+				08823775D308688FD622CB16 /* ReeveTests.swift */,
 				C8637625F395FD0D2B924A0E /* RenderOutputTest.swift */,
 				6D06D673012E855AA03509D5 /* SecurityTests.swift */,
 			);
@@ -163,6 +170,7 @@
 				3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */,
 				EE95DD3ABC5FB85FBC042DFC /* HTMLConverter.swift */,
 				C7AB33B21266EE578C0F1E19 /* HTMLTemplate.swift */,
+				C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */,
 				AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */,
 			);
 			path = Shared;
@@ -252,6 +260,14 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					19134EF21275D9E2B6031D78 = {
+						DevelopmentTeam = LY8G872X5U;
+						ProvisioningStyle = Manual;
+					};
+					A2650228B0FC57F5D842A9CF = {
+						DevelopmentTeam = LY8G872X5U;
+						ProvisioningStyle = Manual;
+					};
 				};
 			};
 			buildConfigurationList = 6B4A1E257402726EF7395A21 /* Build configuration list for PBXProject "PreviewMD" */;
@@ -288,6 +304,7 @@
 				71D46F12B23DE05D0FFD06A4 /* FrontmatterParser.swift in Sources */,
 				5F1997E59E2E5293FC0B77FE /* HTMLConverter.swift in Sources */,
 				4443B10326EE7FC58A31536B /* HTMLTemplate.swift in Sources */,
+				1D60496746E2DEAFF37A007D /* HTMLUtils.swift in Sources */,
 				514A1CBFFDAB6FA237C1237E /* MarkdownRenderer.swift in Sources */,
 				CDF8F4229DF34DB30D1C0011 /* PreviewMDApp.swift in Sources */,
 			);
@@ -300,6 +317,7 @@
 				0D68D9CDE0B66AC84CE514AE /* FrontmatterParser.swift in Sources */,
 				D71E79D0799869CDACAE7E96 /* HTMLConverter.swift in Sources */,
 				5AD79E746EE6D9D71A48DB41 /* HTMLTemplate.swift in Sources */,
+				46115B7B9E34A4E1B65CA883 /* HTMLUtils.swift in Sources */,
 				CFD063D3EE18CAD0FD24ED0A /* MarkdownRenderer.swift in Sources */,
 				EBE207D0FA84DBC37A659119 /* PreviewViewController.swift in Sources */,
 			);
@@ -313,9 +331,11 @@
 				147CCAC9AFF962EAC3CE3815 /* FrontmatterParser.swift in Sources */,
 				BEB62B9B89F1F120510301CD /* HTMLConverter.swift in Sources */,
 				0188BAA558BF3B2E85BA2B21 /* HTMLTemplate.swift in Sources */,
+				77A1A961C292BF21A0AF2351 /* HTMLUtils.swift in Sources */,
 				22B54D361CF3A0CCDC57E615 /* MarkdownRenderer.swift in Sources */,
 				738C38ADAFED8A4AFA61382B /* MarkdownRendererTests.swift in Sources */,
 				484A43C9EF3C9186579A4F4A /* PerformanceTests.swift in Sources */,
+				43D185B01CCB13F51896FD82 /* ReeveTests.swift in Sources */,
 				868B9E61A6AE8EEDB098AE71 /* RenderOutputTest.swift in Sources */,
 				F98D58774F03382A7FB8B0D1 /* SecurityTests.swift in Sources */,
 			);
@@ -337,9 +357,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = App/PreviewMD.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LY8G872X5U;
 				INFOPLIST_FILE = App/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -359,9 +381,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = App/PreviewMD.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LY8G872X5U;
 				INFOPLIST_FILE = App/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -380,9 +404,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Extension/PreviewMDQuickLook.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LY8G872X5U;
 				INFOPLIST_FILE = Extension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
@@ -490,9 +516,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Extension/PreviewMDQuickLook.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)";
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LY8G872X5U;
 				INFOPLIST_FILE = Extension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
