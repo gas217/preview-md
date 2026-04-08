@@ -63,12 +63,14 @@ enum MarkdownRenderer {
         // Render remaining fields as a definition list
         let dateFieldNames: Set<String> = ["date", "created", "modified", "updated", "due", "deadline", "created_at", "updated_at", "published", "completed"]
         let skipFields = Set(["title", "status", "priority", "tags"]).union(dateFieldNames)
-        let otherFields = fm.fields.filter { !skipFields.contains($0.key) }
+        let otherFields = fm.fields
+            .filter { !skipFields.contains($0.key) }
+            .sorted { fieldSortOrder($0.key) < fieldSortOrder($1.key) }
 
         if !otherFields.isEmpty {
             html += "  <dl class=\"fm-fields\">\n"
             for field in otherFields {
-                html += "    <dt>\(escapeHTML(field.key))</dt>\n"
+                html += "    <dt>\(escapeHTML(formatFieldLabel(field.key)))</dt>\n"
                 html += "    <dd>\(escapeHTML(formatValue(field.value)))</dd>\n"
             }
             html += "  </dl>\n"
@@ -108,6 +110,26 @@ enum MarkdownRenderer {
         default:
             return "badge-gray"
         }
+    }
+
+    private static func fieldSortOrder(_ key: String) -> Int {
+        // Semantic ordering: identity fields first, then descriptions, then rest
+        switch key.lowercased() {
+        case "id": return 0
+        case "type", "kind", "category": return 1
+        case "description", "summary", "prompt": return 2
+        case "assignee", "author", "owner": return 3
+        case "parent", "project", "epic": return 4
+        default: return 10
+        }
+    }
+
+    private static func formatFieldLabel(_ key: String) -> String {
+        // Convert snake_case/kebab-case to Title Case
+        key.split(separator: "_")
+            .flatMap { $0.split(separator: "-") }
+            .map { $0.prefix(1).uppercased() + $0.dropFirst().lowercased() }
+            .joined(separator: " ")
     }
 
     private static func formatValue(_ value: Any) -> String {
