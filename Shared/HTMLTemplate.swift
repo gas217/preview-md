@@ -226,11 +226,14 @@ enum HTMLTemplate {
 
     .markdown-body p {
         margin-bottom: 1em;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
     }
 
     .markdown-body a {
         color: var(--link);
         text-decoration: none;
+        word-break: break-all;
     }
 
     .markdown-body a:hover {
@@ -279,16 +282,21 @@ enum HTMLTemplate {
     .task-list-item input[type="checkbox"] {
         position: absolute;
         left: 0;
-        top: 0.3em;
+        top: 0.35em;
         margin: 0;
         accent-color: var(--accent);
+    }
+
+    .task-list-item p {
+        display: inline;
     }
 
     .task-list-item.done {
         color: var(--text-secondary);
     }
 
-    .task-list-item.done p {
+    .task-list-item.done > p,
+    .task-list-item.done > input ~ p {
         text-decoration: line-through;
         opacity: 0.7;
     }
@@ -310,8 +318,10 @@ enum HTMLTemplate {
         border-radius: 8px;
         padding: 16px;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         margin-bottom: 1em;
         line-height: 1.45;
+        tab-size: 4;
     }
 
     .markdown-body pre code {
@@ -355,6 +365,9 @@ enum HTMLTemplate {
         border-collapse: collapse;
         margin-bottom: 1em;
         font-size: 14px;
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .markdown-body th,
@@ -362,14 +375,17 @@ enum HTMLTemplate {
         border: 1px solid var(--table-border);
         padding: 8px 12px;
         text-align: left;
+        white-space: nowrap;
+    }
+
+    .markdown-body td {
+        white-space: normal;
     }
 
     .markdown-body th {
         background: var(--bg-secondary);
         font-weight: 600;
         font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.02em;
     }
 
     .markdown-body tbody tr:nth-child(even) {
