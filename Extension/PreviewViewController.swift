@@ -2,23 +2,30 @@ import Cocoa
 import Quartz
 import WebKit
 
-class PreviewViewController: NSViewController, QLPreviewingController {
+class PreviewViewController: NSViewController, QLPreviewingController, WKNavigationDelegate {
     private var webView: WKWebView!
 
     override func loadView() {
         let config = WKWebViewConfiguration()
-        webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 800, height: 600), configuration: config)
-        webView.setValue(false, forKey: "drawsBackground")
+        webView = WKWebView(frame: .zero, configuration: config)
+        webView.autoresizingMask = [.height, .width]
+        webView.navigationDelegate = self
+        webView.isHidden = true
         self.view = webView
     }
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
         do {
             let html = try MarkdownRenderer.render(fileAt: url)
-            webView.loadHTMLString(html, baseURL: nil)
+            webView.loadHTMLString(html, baseURL: url.deletingLastPathComponent())
             handler(nil)
         } catch {
             handler(error)
         }
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        webView.isHidden = false
+        webView.window?.makeFirstResponder(webView)
     }
 }

@@ -102,6 +102,13 @@ final class EdgeCaseTests: XCTestCase {
         XCTAssertTrue(html.contains("CR Only"), "Frontmatter parsed with CR-only endings")
     }
 
+    func testBOMWithMalformedYAML() {
+        let input = "\u{FEFF}---\nthis is not: [valid yaml\n---\n# Content\nHello"
+        let result = FrontmatterParser.parse(input)
+        // Content should be BOM-stripped even on YAML error path
+        XCTAssertFalse(result.content.hasPrefix("\u{FEFF}"), "BOM should be stripped on malformed YAML path")
+    }
+
     // MARK: - Long content
 
     func testVeryLongLine() {
@@ -138,6 +145,20 @@ final class EdgeCaseTests: XCTestCase {
         XCTAssertTrue(html.contains("3.14"), "Float rendered")
     }
 
+    func testZeroNotShownAsBool() {
+        let input = """
+        ---
+        title: Zero Test
+        count: 0
+        retries: 1
+        ---
+        """
+        let html = MarkdownRenderer.render(input)
+        // 0 and 1 should render as numbers, not "No"/"Yes"
+        XCTAssertTrue(html.contains(">0<"), "Zero should render as 0, not No")
+        XCTAssertTrue(html.contains(">1<"), "One should render as 1, not Yes")
+    }
+
     // MARK: - Edge case markdown
 
     func testEmptyCodeBlock() {
@@ -151,6 +172,13 @@ final class EdgeCaseTests: XCTestCase {
         let html = MarkdownRenderer.render(input)
         XCTAssertTrue(html.contains("<h1"))
         XCTAssertTrue(html.contains("<h6"))
+    }
+
+    func testDuplicateHeadingIDs() {
+        let input = "## Notes\n\nFirst section.\n\n## Notes\n\nSecond section."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("id=\"notes\""), "First heading gets base ID")
+        XCTAssertTrue(html.contains("id=\"notes-1\""), "Second heading gets deduplicated ID")
     }
 
     func testHorizontalRules() {
@@ -176,5 +204,44 @@ final class EdgeCaseTests: XCTestCase {
         let html = MarkdownRenderer.render(input)
         XCTAssertTrue(html.contains("<ol>"), "Ordered list")
         XCTAssertTrue(html.contains("<ul>"), "Nested unordered list")
+    }
+
+    // MARK: - Empty heading ID fallback
+
+    func testEmptyHeadingGetsFallbackID() {
+        // Use chars that all get filtered out (no letters, digits, dashes, or underscores)
+        let input = "## @#$%"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("id=\"heading\""), "Empty heading should get fallback ID")
+    }
+
+    func testDuplicateEmptyHeadings() {
+        let input = "## @#$\n\n## @#$"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("id=\"heading\""))
+        XCTAssertTrue(html.contains("id=\"heading-1\""), "Second empty heading gets deduplicated ID")
+    }
+
+    // MARK: - Code block language label
+
+    func testCodeBlockDataLang() {
+        let input = "```swift\nlet x = 1\n```"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("data-lang=\"swift\""), "Code block should have data-lang attribute")
+    }
+
+    func testCodeBlockNoLangNoDataLang() {
+        let input = "```\nplain code\n```"
+        let html = MarkdownRenderer.render(input)
+        // Check the <code> tag itself doesn't have data-lang (it also appears in CSS/JS template)
+        XCTAssertTrue(html.contains("<pre><code>plain code"), "Unlabeled code block should render without data-lang on tag")
+    }
+
+    // MARK: - Image lazy loading
+
+    func testImageLazyLoading() {
+        let input = "![alt](image.png)"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("loading=\"lazy\""), "Images should have lazy loading")
     }
 }

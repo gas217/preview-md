@@ -2,13 +2,13 @@ import Foundation
 
 enum HTMLTemplate {
     static func build(frontmatter: String, content: String) -> String {
+        let nonce = generateNonce()
         return """
         <!DOCTYPE html>
         <html>
         <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src file: data:;">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-\(nonce)'; img-src file: data:;">
         <style>
         \(css)
         </style>
@@ -18,13 +18,21 @@ enum HTMLTemplate {
         <article class="markdown-body">
         \(content)
         </article>
-        <script>
+        <script nonce="\(nonce)">
         \(highlightScript)
         \(autolinkScript)
+        document.body.setAttribute('tabindex', '0');
+        document.body.focus();
         </script>
         </body>
         </html>
         """
+    }
+
+    private static func generateNonce() -> String {
+        var bytes = [UInt8](repeating: 0, count: 16)
+        _ = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)
+        return Data(bytes).base64EncodedString()
     }
 
     // MARK: - CSS Theme (embedded for reliability)
@@ -40,11 +48,6 @@ enum HTMLTemplate {
         --border: #d2d2d7;
         --accent: #0071e3;
         --link: #0066cc;
-        --code-bg: #f5f5f7;
-        --code-text: #1d1d1f;
-        --blockquote-border: #d2d2d7;
-        --blockquote-text: #6e6e73;
-        --table-border: #d2d2d7;
         --table-stripe: #f9f9fb;
         --badge-green-bg: #e3f8e8;
         --badge-green-text: #1a7a2e;
@@ -57,12 +60,8 @@ enum HTMLTemplate {
         --badge-orange-bg: #fff0e0;
         --badge-orange-text: #b35c00;
         --badge-gray-bg: #f0f0f2;
-        --badge-gray-text: #6e6e73;
         --tag-bg: #e8e8ed;
         --tag-text: #48484a;
-        --fm-bg: #f5f5f7;
-        --fm-border: #d2d2d7;
-        --hr: #d2d2d7;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -74,11 +73,6 @@ enum HTMLTemplate {
             --border: #48484a;
             --accent: #2997ff;
             --link: #64b5f6;
-            --code-bg: #2c2c2e;
-            --code-text: #f5f5f7;
-            --blockquote-border: #48484a;
-            --blockquote-text: #a1a1a6;
-            --table-border: #48484a;
             --table-stripe: #252527;
             --badge-green-bg: #1a3a1f;
             --badge-green-text: #6ee07a;
@@ -91,12 +85,11 @@ enum HTMLTemplate {
             --badge-orange-bg: #3a2815;
             --badge-orange-text: #ffb366;
             --badge-gray-bg: #38383a;
-            --badge-gray-text: #a1a1a6;
             --tag-bg: #38383a;
             --tag-text: #c7c7cc;
-            --fm-bg: #2c2c2e;
-            --fm-border: #48484a;
-            --hr: #48484a;
+        }
+        ::selection {
+            background: rgba(41, 151, 255, 0.35);
         }
     }
 
@@ -104,6 +97,14 @@ enum HTMLTemplate {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+    }
+
+    ::selection {
+        background: rgba(0, 113, 227, 0.25);
+    }
+
+    html {
+        scroll-behavior: smooth;
     }
 
     body {
@@ -116,14 +117,13 @@ enum HTMLTemplate {
         max-width: 860px;
         margin: 0 auto;
         -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
     }
 
     /* Frontmatter */
 
     .frontmatter {
-        background: var(--fm-bg);
-        border: 1px solid var(--fm-border);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
         border-radius: 10px;
         padding: 20px 24px;
         margin-bottom: 28px;
@@ -159,7 +159,7 @@ enum HTMLTemplate {
     .badge-red    { background: var(--badge-red-bg);     color: var(--badge-red-text); }
     .badge-yellow { background: var(--badge-yellow-bg);  color: var(--badge-yellow-text); }
     .badge-orange { background: var(--badge-orange-bg);  color: var(--badge-orange-text); }
-    .badge-gray   { background: var(--badge-gray-bg);   color: var(--badge-gray-text); }
+    .badge-gray   { background: var(--badge-gray-bg);   color: var(--text-secondary); }
 
     .fm-date {
         font-size: 13px;
@@ -187,11 +187,9 @@ enum HTMLTemplate {
     .fm-fields dt {
         color: var(--text-secondary);
         font-weight: 500;
-        text-transform: capitalize;
     }
 
     .fm-fields dd {
-        color: var(--text);
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
@@ -209,12 +207,7 @@ enum HTMLTemplate {
         margin-top: 0;
     }
 
-    .markdown-body h1,
-    .markdown-body h2,
-    .markdown-body h3,
-    .markdown-body h4,
-    .markdown-body h5,
-    .markdown-body h6 {
+    .markdown-body :is(h1, h2, h3, h4, h5, h6) {
         margin-top: 1.5em;
         margin-bottom: 0.5em;
         font-weight: 600;
@@ -225,14 +218,12 @@ enum HTMLTemplate {
     .markdown-body h1 { font-size: 1.8em; font-weight: 700; letter-spacing: -0.02em; }
     .markdown-body h2 { font-size: 1.4em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
     .markdown-body h3 { font-size: 1.15em; }
-    .markdown-body h4 { font-size: 1em; }
     .markdown-body h5 { font-size: 0.9em; }
     .markdown-body h6 { font-size: 0.85em; color: var(--text-secondary); }
 
     .markdown-body p {
         margin-bottom: 1em;
         overflow-wrap: break-word;
-        word-wrap: break-word;
     }
 
     .markdown-body a {
@@ -243,6 +234,7 @@ enum HTMLTemplate {
 
     .markdown-body a:hover {
         text-decoration: underline;
+        text-underline-offset: 2px;
     }
 
     .markdown-body strong {
@@ -265,10 +257,7 @@ enum HTMLTemplate {
         margin-bottom: 0.5em;
     }
 
-    .markdown-body ul ul,
-    .markdown-body ol ol,
-    .markdown-body ul ol,
-    .markdown-body ol ul {
+    .markdown-body :is(ul, ol) :is(ul, ol) {
         margin-bottom: 0;
     }
 
@@ -300,8 +289,7 @@ enum HTMLTemplate {
         color: var(--text-secondary);
     }
 
-    .task-list-item.done > p,
-    .task-list-item.done > input ~ p {
+    .task-list-item.done > p {
         text-decoration: line-through;
         opacity: 0.7;
     }
@@ -311,30 +299,39 @@ enum HTMLTemplate {
     .markdown-body code {
         font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
         font-size: 0.88em;
-        background: var(--code-bg);
-        color: var(--code-text);
+        background: var(--bg-secondary);
+        color: var(--text);
         padding: 0.15em 0.4em;
         border-radius: 4px;
     }
 
     .markdown-body pre {
-        background: var(--code-bg);
+        background: var(--bg-secondary);
         border: 1px solid var(--border);
         border-radius: 8px;
         padding: 16px;
         overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
         margin-bottom: 1em;
         line-height: 1.45;
         tab-size: 4;
+        position: relative;
     }
 
     .markdown-body pre code {
-        background: none;
-        padding: 0;
-        border-radius: 0;
+        background: none; padding: 0; border-radius: 0;
         font-size: 13px;
-        color: var(--code-text);
+    }
+
+    .markdown-body pre code[class*="language-"]::before {
+        content: attr(data-lang);
+        position: absolute;
+        top: 6px;
+        right: 10px;
+        font-family: -apple-system, sans-serif;
+        font-size: 11px;
+        color: var(--text-secondary);
+        opacity: 0.6;
+        pointer-events: none;
     }
 
     /* Syntax Highlighting */
@@ -353,8 +350,8 @@ enum HTMLTemplate {
     /* Blockquotes */
 
     .markdown-body blockquote {
-        border-left: 4px solid var(--blockquote-border);
-        color: var(--blockquote-text);
+        border-left: 3px solid var(--accent);
+        color: var(--text-secondary);
         padding: 0.5em 1em;
         margin: 0 0 1em 0;
     }
@@ -365,26 +362,22 @@ enum HTMLTemplate {
 
     /* Tables */
 
+    .markdown-body .table-wrap {
+        overflow-x: auto;
+        margin-bottom: 1em;
+    }
+
     .markdown-body table {
         width: 100%;
         border-collapse: collapse;
-        margin-bottom: 1em;
         font-size: 14px;
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
     }
 
     .markdown-body th,
     .markdown-body td {
-        border: 1px solid var(--table-border);
+        border: 1px solid var(--border);
         padding: 8px 12px;
         text-align: left;
-        white-space: nowrap;
-    }
-
-    .markdown-body td {
-        white-space: normal;
     }
 
     .markdown-body th {
@@ -397,11 +390,15 @@ enum HTMLTemplate {
         background: var(--table-stripe);
     }
 
+    .markdown-body tbody tr:hover {
+        background: var(--bg-secondary);
+    }
+
     /* Horizontal Rule */
 
     .markdown-body hr {
         border: none;
-        border-top: 1px solid var(--hr);
+        border-top: 1px solid var(--border);
         margin: 2em 0;
     }
 
@@ -433,6 +430,15 @@ enum HTMLTemplate {
         text-decoration: line-through;
         opacity: 0.65;
     }
+
+    /* Print */
+    @media print {
+        body { background: white; color: black; max-width: none; padding: 0; }
+        .frontmatter { border-color: #ccc; background: #f9f9f9; }
+        .markdown-body pre { border-color: #ccc; }
+        .markdown-body a { color: #0066cc; }
+        .markdown-body pre code[class*="language-"]::before { display: none; }
+    }
     """
 
     // MARK: - Syntax Highlighting Script (embedded)
@@ -447,33 +453,42 @@ enum HTMLTemplate {
             'go': /\\b(package|import|func|var|const|type|struct|interface|return|if|else|for|range|switch|case|default|break|continue|go|defer|chan|select|map|make|new|append|len|cap|true|false|nil|error|string|int|float64|bool|byte|rune)\\b/g,
             'rust': /\\b(use|mod|fn|let|mut|const|static|struct|enum|impl|trait|return|if|else|for|while|loop|break|continue|match|pub|self|Self|super|crate|where|as|in|ref|move|async|await|true|false|Some|None|Ok|Err|Box|Vec|String|Option|Result|println|macro_rules)\\b/g,
             'ruby': /\\b(require|include|def|class|module|return|if|elsif|else|unless|while|until|for|do|end|begin|rescue|ensure|raise|yield|block_given|self|super|true|false|nil|and|or|not|in|then|puts|print|attr_accessor|attr_reader|attr_writer)\\b/g,
-            'json': null,
-            'yaml': null,
+            'c': /\\b(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|restrict|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while|NULL|true|false|include|define|ifdef|ifndef|endif|pragma)\\b/g,
+            'cpp': /\\b(auto|break|case|char|const|continue|default|do|double|else|enum|extern|float|for|goto|if|inline|int|long|register|return|short|signed|sizeof|static|struct|switch|typedef|union|unsigned|void|volatile|while|class|namespace|template|typename|using|virtual|override|public|private|protected|new|delete|throw|try|catch|nullptr|bool|true|false|const_cast|dynamic_cast|static_cast|reinterpret_cast|include|define|ifdef|ifndef|endif|pragma|constexpr|noexcept|decltype|auto|concept|requires|co_await|co_return|co_yield)\\b/g,
+            'java': /\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|implements|import|instanceof|int|interface|long|native|new|package|private|protected|public|return|short|static|strictfp|super|switch|synchronized|this|throw|throws|transient|try|void|volatile|while|true|false|null|var|record|sealed|permits|yield)\\b/g,
+            'kotlin': /\\b(abstract|actual|annotation|as|break|by|catch|class|companion|const|constructor|continue|crossinline|data|do|else|enum|expect|external|false|final|finally|for|fun|get|if|import|in|infix|init|inline|inner|interface|internal|is|lateinit|noinline|null|object|open|operator|out|override|package|private|protected|public|reified|return|sealed|set|super|suspend|tailrec|this|throw|true|try|typealias|val|var|vararg|when|where|while)\\b/g,
+            'php': /\\b(abstract|and|array|as|break|callable|case|catch|class|clone|const|continue|declare|default|die|do|echo|else|elseif|empty|enddeclare|endfor|endforeach|endif|endswitch|endwhile|eval|exit|extends|final|finally|fn|for|foreach|function|global|goto|if|implements|include|instanceof|insteadof|interface|isset|list|match|namespace|new|or|print|private|protected|public|readonly|require|return|static|switch|throw|trait|try|unset|use|var|while|xor|yield|true|false|null|self)\\b/g,
             'bash': /\\b(if|then|else|elif|fi|for|while|do|done|case|esac|function|return|local|export|source|echo|exit|test|cd|ls|grep|sed|awk|cat|mkdir|rm|cp|mv|chmod|chown|curl|wget|sudo|apt|brew|npm|git|docker)\\b/g,
-            'sh': null,
-            'html': null,
-            'css': null,
             'sql': /\\b(SELECT|FROM|WHERE|INSERT|INTO|UPDATE|SET|DELETE|CREATE|DROP|ALTER|TABLE|INDEX|VIEW|JOIN|LEFT|RIGHT|INNER|OUTER|ON|AND|OR|NOT|IN|EXISTS|BETWEEN|LIKE|ORDER|BY|GROUP|HAVING|LIMIT|OFFSET|AS|NULL|IS|DISTINCT|UNION|ALL|COUNT|SUM|AVG|MIN|MAX|CASE|WHEN|THEN|ELSE|END|PRIMARY|KEY|FOREIGN|REFERENCES|CONSTRAINT|DEFAULT|VALUES)\\b/gi,
         };
 
-        const stringRegex = /("(?:[^"\\\\]|\\\\.)*"|'(?:[^'\\\\]|\\\\.)*'|`(?:[^`\\\\]|\\\\.)*`)/g;
-        const commentRegex = /(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/|#.*$)/gm;
+        // Language aliases
+        const aliases = {'sh': 'bash', 'shell': 'bash', 'zsh': 'bash', 'c++': 'cpp', 'cxx': 'cpp', 'objc': 'c', 'objective-c': 'c', 'kt': 'kotlin', 'py': 'python', 'js': 'javascript', 'ts': 'typescript', 'rs': 'rust', 'rb': 'ruby'};
+
+        const hashOnlyLangs = new Set(['python', 'ruby', 'bash']);
+        const sqlCommentSrc = '(--.*$|\\/\\*[\\s\\S]*?\\*\\/)';
+        const cCommentSrc = '(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/)';
+        const hashCommentSrc = '(#.*$)';
+        const phpCommentSrc = '(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/|#.*$)';
+        const stringSrc = '("(?:[^"\\\\\\\\]|\\\\\\\\.)*"|' + "'(?:[^'\\\\\\\\]|\\\\\\\\.)*'" + '|`(?:[^`\\\\\\\\]|\\\\\\\\.)*`)';
         const numberRegex = /\\b(\\d+\\.?\\d*(?:e[+-]?\\d+)?|0x[0-9a-fA-F]+|0b[01]+|0o[0-7]+)\\b/g;
+
+        function esc(s) {
+            return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
 
         document.querySelectorAll('pre code[class*="language-"]').forEach(function(block) {
             const langMatch = block.className.match(/language-(\\w+)/);
             if (!langMatch) return;
-            const lang = langMatch[1].toLowerCase();
+            const lang = aliases[langMatch[1].toLowerCase()] || langMatch[1].toLowerCase();
             if (!keywords[lang]) return;
 
-            // Use textContent to avoid HTML entity issues, then re-escape
             const raw = block.textContent;
             const tokens = [];
 
-            // Tokenize: extract comments, strings, then highlight rest
-            const combined = new RegExp(
-                '(' + commentRegex.source + ')|(' + stringRegex.source + ')', 'gm'
-            );
+            // Pick comment pattern based on language
+            var cmtSrc = hashOnlyLangs.has(lang) ? hashCommentSrc : (lang === 'sql' ? sqlCommentSrc : (lang === 'php' ? phpCommentSrc : cCommentSrc));
+            const combined = new RegExp(cmtSrc + '|' + stringSrc, 'gm');
 
             let lastIdx = 0;
             let match;
@@ -491,10 +506,6 @@ enum HTMLTemplate {
             }
             if (lastIdx < raw.length) {
                 tokens.push({type: 'code', text: raw.slice(lastIdx)});
-            }
-
-            function esc(s) {
-                return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
             }
 
             const kw = keywords[lang];
@@ -518,18 +529,19 @@ enum HTMLTemplate {
     static let autolinkScript = """
     (function() {
         // Auto-link bare URLs in text nodes that aren't already inside links or code
-        const urlRegex = /(https?:\\/\\/[^\\s<>)\\]]+)/g;
+        const urlRegex = /(https?:\\/\\/[^\\s<>]+)/g;
         const article = document.querySelector('.markdown-body');
         if (!article) return;
 
+        function isBalanced(s, open, close) {
+            return (s.match(open) || []).length >= (s.match(close) || []).length;
+        }
+        const skip = new Set(['A', 'CODE', 'PRE', 'SCRIPT']);
         const walker = document.createTreeWalker(article, NodeFilter.SHOW_TEXT, {
             acceptNode: function(node) {
                 const parent = node.parentElement;
-                if (!parent) return NodeFilter.FILTER_REJECT;
-                const tag = parent.tagName.toLowerCase();
-                if (tag === 'a' || tag === 'code' || tag === 'pre' || tag === 'script') {
-                    return NodeFilter.FILTER_REJECT;
-                }
+                if (!parent || skip.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+                urlRegex.lastIndex = 0;
                 return urlRegex.test(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
             }
         });
@@ -544,13 +556,25 @@ enum HTMLTemplate {
             urlRegex.lastIndex = 0;
             let match;
             while ((match = urlRegex.exec(text)) !== null) {
+                var url = match[1];
+                var trailed = '';
+                while (url.length > 0 && /[)\\].,;:!?'"]$/.test(url)) {
+                    var ch = url.slice(-1);
+                    if (ch === ')' && isBalanced(url, /\\(/g, /\\)/g)) break;
+                    if (ch === ']' && isBalanced(url, /\\[/g, /\\]/g)) break;
+                    trailed = ch + trailed;
+                    url = url.slice(0, -1);
+                }
                 if (match.index > lastIndex) {
                     frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
                 }
                 const a = document.createElement('a');
-                a.href = match[1];
-                a.textContent = match[1];
+                a.href = url;
+                a.textContent = url;
                 frag.appendChild(a);
+                if (trailed) {
+                    frag.appendChild(document.createTextNode(trailed));
+                }
                 lastIndex = urlRegex.lastIndex;
             }
             if (lastIndex < text.length) {

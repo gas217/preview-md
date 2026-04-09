@@ -3,37 +3,41 @@ import Markdown
 
 struct HTMLConverter: MarkupVisitor {
     typealias Result = String
+    private var usedIDs: [String: Int] = [:]
 
     mutating func defaultVisit(_ markup: any Markup) -> String {
-        markup.children.map { visit($0) }.joined()
+        visitChildren(markup)
     }
 
     // MARK: - Block Elements
 
     mutating func visitHeading(_ heading: Heading) -> String {
         let level = heading.level
-        let id = heading.plainText
+        var id = heading.recursiveText
             .lowercased()
-            .replacingOccurrences(of: " ", with: "-")
-            .filter { $0.isLetter || $0.isNumber || $0 == "-" }
-        let content = heading.children.map { visit($0) }.joined()
-        return "<h\(level) id=\"\(escapeAttribute(id))\">\(content)</h\(level)>\n"
+            .replacingOccurrences(of: "[\u{2013}\u{2014} ]", with: "-", options: .regularExpression)
+            .filter { $0.isLetter || $0.isNumber || $0 == "-" || $0 == "_" }
+        if id.isEmpty { id = "heading" }
+        let count = usedIDs[id, default: 0]
+        usedIDs[id] = count + 1
+        if count > 0 { id = "\(id)-\(count)" }
+        let content = visitChildren(heading)
+        return "<h\(level) id=\"\(escapeHTML(id))\">\(content)</h\(level)>\n"
     }
 
     mutating func visitParagraph(_ paragraph: Paragraph) -> String {
-        let content = paragraph.children.map { visit($0) }.joined()
-        return "<p>\(content)</p>\n"
+        "<p>\(visitChildren(paragraph))</p>\n"
     }
 
     mutating func visitBlockQuote(_ blockQuote: BlockQuote) -> String {
-        let content = blockQuote.children.map { visit($0) }.joined()
-        return "<blockquote>\n\(content)</blockquote>\n"
+        "<blockquote>\n\(visitChildren(blockQuote))</blockquote>\n"
     }
 
     mutating func visitCodeBlock(_ codeBlock: CodeBlock) -> String {
         let escaped = escapeHTML(codeBlock.code)
         if let lang = codeBlock.language, !lang.isEmpty {
-            return "<pre><code class=\"language-\(escapeAttribute(lang))\">\(escaped)</code></pre>\n"
+            let s = escapeHTML(lang)
+            return "<pre><code class=\"language-\(s)\" data-lang=\"\(s)\">\(escaped)</code></pre>\n"
         }
         return "<pre><code>\(escaped)</code></pre>\n"
     }
@@ -50,79 +54,56 @@ struct HTMLConverter: MarkupVisitor {
     // MARK: - Lists
 
     mutating func visitOrderedList(_ orderedList: OrderedList) -> String {
-        let start = orderedList.startIndex
-        let items = orderedList.children.map { visit($0) }.joined()
-        if start != 1 {
-            return "<ol start=\"\(start)\">\n\(items)</ol>\n"
-        }
-        return "<ol>\n\(items)</ol>\n"
+        let startAttr = orderedList.startIndex != 1 ? " start=\"\(orderedList.startIndex)\"" : ""
+        return "<ol\(startAttr)>\n\(visitChildren(orderedList))</ol>\n"
     }
 
     mutating func visitUnorderedList(_ unorderedList: UnorderedList) -> String {
-        let hasCheckboxes = unorderedList.children.contains { child in
-            if let item = child as? ListItem {
-                return item.checkbox != nil
-            }
-            return false
-        }
-        let items = unorderedList.children.map { visit($0) }.joined()
-        if hasCheckboxes {
-            return "<ul class=\"task-list\">\n\(items)</ul>\n"
-        }
-        return "<ul>\n\(items)</ul>\n"
+        let isTasks = unorderedList.children.contains { ($0 as? ListItem)?.checkbox != nil }
+        let cls = isTasks ? " class=\"task-list\"" : ""
+        return "<ul\(cls)>\n\(visitChildren(unorderedList))</ul>\n"
     }
 
     mutating func visitListItem(_ listItem: ListItem) -> String {
-        let content = listItem.children.map { visit($0) }.joined()
-        if let checkbox = listItem.checkbox {
-            let checked = checkbox == .checked
-            let checkedAttr = checked ? " checked disabled" : " disabled"
-            let className = checked ? "task-list-item done" : "task-list-item"
-            return "<li class=\"\(className)\"><input type=\"checkbox\"\(checkedAttr)> \(content)</li>\n"
-        }
-        return "<li>\(content)</li>\n"
+        let content = visitChildren(listItem)
+        guard let checkbox = listItem.checkbox else { return "<li>\(content)</li>\n" }
+        let done = checkbox == .checked
+        return "<li class=\"task-list-item\(done ? " done" : "")\"><input type=\"checkbox\"\(done ? " checked disabled" : " disabled")> \(content)</li>\n"
     }
 
     // MARK: - Tables
 
     mutating func visitTable(_ table: Table) -> String {
-        let alignments = table.columnAlignments
-        var html = "<table>\n"
-        html += "<thead>\n<tr>\n"
-        for (i, cell) in table.head.cells.enumerated() {
-            let align = alignmentAttr(alignments, column: i)
-            let content = cell.children.map { visit($0) }.joined()
-            html += "<th\(align)>\(content)</th>\n"
-        }
+        let aligns = table.columnAlignments
+        var html = "<div class=\"table-wrap\"><table>\n<thead>\n<tr>\n"
+        html += renderCells(table.head.cells, tag: "th", alignments: aligns)
         html += "</tr>\n</thead>\n"
 
-        let bodyChildren = Array(table.body.children)
-        if !bodyChildren.isEmpty {
+        let rows = table.body.children.compactMap { $0 as? Table.Row }
+        if !rows.isEmpty {
             html += "<tbody>\n"
-            for child in bodyChildren {
-                if let row = child as? Table.Row {
-                    html += "<tr>\n"
-                    for (i, cell) in row.cells.enumerated() {
-                        let align = alignmentAttr(alignments, column: i)
-                        let content = cell.children.map { visit($0) }.joined()
-                        html += "<td\(align)>\(content)</td>\n"
-                    }
-                    html += "</tr>\n"
-                }
+            for row in rows {
+                html += "<tr>\n"
+                html += renderCells(row.cells, tag: "td", alignments: aligns)
+                html += "</tr>\n"
             }
             html += "</tbody>\n"
         }
-        html += "</table>\n"
+        html += "</table></div>\n"
         return html
     }
 
-    private func alignmentAttr(_ alignments: [Table.ColumnAlignment?], column: Int) -> String {
-        guard column < alignments.count, let alignment = alignments[column] else { return "" }
-        switch alignment {
-        case .left: return " style=\"text-align:left\""
-        case .center: return " style=\"text-align:center\""
-        case .right: return " style=\"text-align:right\""
-        }
+    private mutating func renderCells(_ cells: some Sequence<Table.Cell>, tag: String, alignments: [Table.ColumnAlignment?]) -> String {
+        cells.enumerated().map { (i, cell) in
+            let align = (i < alignments.count ? alignments[i] : nil).map {
+                switch $0 {
+                case .left: return " style=\"text-align:left\""
+                case .center: return " style=\"text-align:center\""
+                case .right: return " style=\"text-align:right\""
+                }
+            } ?? ""
+            return "<\(tag)\(align)>\(visitChildren(cell))</\(tag)>\n"
+        }.joined()
     }
 
     // MARK: - Inline Elements
@@ -132,13 +113,11 @@ struct HTMLConverter: MarkupVisitor {
     }
 
     mutating func visitStrong(_ strong: Strong) -> String {
-        let content = strong.children.map { visit($0) }.joined()
-        return "<strong>\(content)</strong>"
+        "<strong>\(visitChildren(strong))</strong>"
     }
 
     mutating func visitEmphasis(_ emphasis: Emphasis) -> String {
-        let content = emphasis.children.map { visit($0) }.joined()
-        return "<em>\(content)</em>"
+        "<em>\(visitChildren(emphasis))</em>"
     }
 
     mutating func visitInlineCode(_ inlineCode: InlineCode) -> String {
@@ -146,27 +125,18 @@ struct HTMLConverter: MarkupVisitor {
     }
 
     mutating func visitLink(_ link: Markdown.Link) -> String {
-        let content = link.children.map { visit($0) }.joined()
+        let content = visitChildren(link)
         let rawHref = link.destination ?? ""
         guard isSafeURL(rawHref) else { return content }
-        let href = escapeAttribute(rawHref)
-        if let title = link.title, !title.isEmpty {
-            return "<a href=\"\(href)\" title=\"\(escapeAttribute(title))\">\(content)</a>"
-        }
-        return "<a href=\"\(href)\">\(content)</a>"
+        return "<a href=\"\(escapeHTML(rawHref))\"\(attr("title", link.title))>\(content)</a>"
     }
 
     mutating func visitImage(_ image: Markdown.Image) -> String {
-        let alt = image.plainText
         let rawSrc = image.source ?? ""
         guard isSafeURL(rawSrc) else {
-            return "<span>[\(escapeHTML(alt))]</span>"
+            return "<span>[\(escapeHTML(image.plainText))]</span>"
         }
-        let src = escapeAttribute(rawSrc)
-        if let title = image.title, !title.isEmpty {
-            return "<img src=\"\(src)\" alt=\"\(escapeAttribute(alt))\" title=\"\(escapeAttribute(title))\">"
-        }
-        return "<img src=\"\(src)\" alt=\"\(escapeAttribute(alt))\">"
+        return "<img src=\"\(escapeHTML(rawSrc))\" alt=\"\(escapeHTML(image.plainText))\"\(attr("title", image.title)) loading=\"lazy\">"
     }
 
     mutating func visitSoftBreak(_ softBreak: SoftBreak) -> String {
@@ -178,8 +148,7 @@ struct HTMLConverter: MarkupVisitor {
     }
 
     mutating func visitStrikethrough(_ strikethrough: Strikethrough) -> String {
-        let content = strikethrough.children.map { visit($0) }.joined()
-        return "<del>\(content)</del>"
+        "<del>\(visitChildren(strikethrough))</del>"
     }
 
     mutating func visitInlineHTML(_ inlineHTML: InlineHTML) -> String {
@@ -189,19 +158,30 @@ struct HTMLConverter: MarkupVisitor {
 
     // MARK: - Helpers
 
+    private mutating func visitChildren(_ markup: any Markup) -> String {
+        markup.children.map { visit($0) }.joined()
+    }
+
     private func escapeHTML(_ string: String) -> String {
         HTMLUtils.escapeHTML(string)
     }
 
-    private func escapeAttribute(_ string: String) -> String {
-        HTMLUtils.escapeHTML(string)
+    private func attr(_ name: String, _ value: String?) -> String {
+        guard let v = value, !v.isEmpty else { return "" }
+        return " \(name)=\"\(escapeHTML(v))\""
     }
+
+    private static let maxDataURILength = 10_000_000
+    private static let safeDataURIPrefixes = ["data:image/png", "data:image/jpeg", "data:image/gif", "data:image/webp", "data:image/bmp", "data:image/x-icon"]
 
     private func isSafeURL(_ url: String) -> Bool {
         let trimmed = url.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        // Block dangerous protocols
-        if trimmed.hasPrefix("javascript:") || trimmed.hasPrefix("vbscript:") || trimmed.hasPrefix("data:text/html") {
+        if trimmed.hasPrefix("javascript:") || trimmed.hasPrefix("vbscript:") {
             return false
+        }
+        if trimmed.hasPrefix("data:") {
+            return url.count <= Self.maxDataURILength
+                && Self.safeDataURIPrefixes.contains(where: { trimmed.hasPrefix($0) })
         }
         return true
     }
@@ -209,23 +189,12 @@ struct HTMLConverter: MarkupVisitor {
 }
 
 extension Markup {
-    /// Recursively extract all text content from any markup node
     var recursiveText: String {
-        if let text = self as? Text {
-            return text.plainText
+        switch self {
+        case let text as Text: return text.plainText
+        case let code as InlineCode: return code.code
+        case is SoftBreak: return " "
+        default: return children.map { $0.recursiveText }.joined()
         }
-        if let code = self as? InlineCode {
-            return code.code
-        }
-        if self is SoftBreak {
-            return " "
-        }
-        return children.map { $0.recursiveText }.joined()
-    }
-}
-
-extension Heading {
-    var plainText: String {
-        recursiveText
     }
 }

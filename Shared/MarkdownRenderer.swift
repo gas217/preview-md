@@ -3,16 +3,10 @@ import Markdown
 
 enum MarkdownRenderer {
     static func render(fileAt url: URL) throws -> String {
-        let content: String
-        if let utf8 = try? String(contentsOf: url, encoding: .utf8) {
-            content = utf8
-        } else if let latin1 = try? String(contentsOf: url, encoding: .isoLatin1) {
-            content = latin1
-        } else {
-            // Last resort: lossy UTF-8
-            let data = try Data(contentsOf: url)
-            content = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii) ?? ""
-        }
+        let data = try Data(contentsOf: url)
+        let content = String(data: data, encoding: .utf8)
+            ?? String(data: data, encoding: .isoLatin1)
+            ?? ""
         return render(content)
     }
 
@@ -27,51 +21,48 @@ enum MarkdownRenderer {
 
     private static func renderFrontmatter(_ frontmatter: Frontmatter?) -> String {
         guard let fm = frontmatter else { return "" }
+        let esc = HTMLUtils.escapeHTML
 
         var html = "<div class=\"frontmatter\">\n"
 
         if let title = fm.title {
-            html += "  <h1 class=\"fm-title\">\(escapeHTML(title))</h1>\n"
+            html += "  <h1 class=\"fm-title\">\(esc(title))</h1>\n"
         }
 
         var metaItems: [String] = []
 
         if let status = fm.status {
-            let statusClass = statusColorClass(status)
-            metaItems.append("<span class=\"fm-badge \(statusClass)\">\(escapeHTML(status))</span>")
+            metaItems.append("<span class=\"fm-badge \(badgeClass(status, from: statusColors))\">\(esc(status))</span>")
         }
 
         if let priority = fm.priority {
-            let priorityClass = priorityColorClass(priority)
-            metaItems.append("<span class=\"fm-badge \(priorityClass)\">Priority: \(escapeHTML(priority))</span>")
+            metaItems.append("<span class=\"fm-badge \(badgeClass(priority, from: priorityColors))\">Priority: \(esc(priority))</span>")
         }
 
         for dateEntry in fm.dates {
-            let label = dateEntry.label == "date" ? "" : "\(escapeHTML(dateEntry.label)): "
-            metaItems.append("<span class=\"fm-date\">\(label)\(escapeHTML(dateEntry.value))</span>")
+            let label = dateEntry.label == "date" ? "" : "\(esc(dateEntry.label)): "
+            metaItems.append("<span class=\"fm-date\">\(label)\(esc(dateEntry.value))</span>")
         }
 
         if !fm.tags.isEmpty {
-            let tagHTML = fm.tags.map { "<span class=\"fm-tag\">\(escapeHTML($0))</span>" }.joined(separator: " ")
-            metaItems.append(tagHTML)
+            metaItems.append(fm.tags.map { "<span class=\"fm-tag\">\(esc($0))</span>" }.joined(separator: " "))
         }
 
         if !metaItems.isEmpty {
             html += "  <div class=\"fm-meta\">\(metaItems.joined(separator: " "))</div>\n"
         }
 
-        // Render remaining fields as a definition list
-        let dateFieldNames: Set<String> = ["date", "created", "modified", "updated", "due", "deadline", "created_at", "updated_at", "published", "completed"]
-        let skipFields = Set(["title", "status", "priority", "tags"]).union(dateFieldNames)
         let otherFields = fm.fields
             .filter { !skipFields.contains($0.key) }
-            .sorted { fieldSortOrder($0.key) < fieldSortOrder($1.key) }
+            .sorted {
+                let (a, b) = (fieldOrder[$0.key.lowercased()] ?? 10, fieldOrder[$1.key.lowercased()] ?? 10)
+                return a != b ? a < b : $0.key < $1.key
+            }
 
         if !otherFields.isEmpty {
             html += "  <dl class=\"fm-fields\">\n"
             for field in otherFields {
-                html += "    <dt>\(escapeHTML(formatFieldLabel(field.key)))</dt>\n"
-                html += "    <dd>\(escapeHTML(formatValue(field.value)))</dd>\n"
+                html += "    <dt>\(esc(formatFieldLabel(field.key)))</dt><dd>\(esc(formatValue(field.value)))</dd>\n"
             }
             html += "  </dl>\n"
         }
@@ -80,72 +71,53 @@ enum MarkdownRenderer {
         return html
     }
 
-    private static func statusColorClass(_ status: String) -> String {
-        switch status.lowercased() {
-        case "done", "complete", "completed", "closed", "resolved":
-            return "badge-green"
-        case "in progress", "in-progress", "active", "doing", "wip":
-            return "badge-blue"
-        case "blocked", "stuck":
-            return "badge-red"
-        case "todo", "to do", "open", "new", "backlog":
-            return "badge-gray"
-        case "review", "in review", "pending":
-            return "badge-yellow"
-        default:
-            return "badge-gray"
-        }
+    private static let skipFields = Set(["title", "status", "priority", "tags"]).union(Frontmatter.dateFields)
+
+    private static let statusColors: [String: String] = [
+        "done": "badge-green", "complete": "badge-green", "completed": "badge-green",
+        "closed": "badge-green", "resolved": "badge-green",
+        "in progress": "badge-blue", "in-progress": "badge-blue",
+        "active": "badge-blue", "doing": "badge-blue", "wip": "badge-blue",
+        "blocked": "badge-red", "stuck": "badge-red",
+        "review": "badge-yellow", "in review": "badge-yellow", "pending": "badge-yellow",
+    ]
+
+    private static let priorityColors: [String: String] = [
+        "critical": "badge-red", "urgent": "badge-red", "p0": "badge-red",
+        "high": "badge-orange", "p1": "badge-orange",
+        "medium": "badge-yellow", "normal": "badge-yellow", "p2": "badge-yellow",
+    ]
+
+    private static func badgeClass(_ value: String, from map: [String: String]) -> String {
+        map[value.lowercased()] ?? "badge-gray"
     }
 
-    private static func priorityColorClass(_ priority: String) -> String {
-        switch priority.lowercased() {
-        case "critical", "urgent", "p0":
-            return "badge-red"
-        case "high", "p1":
-            return "badge-orange"
-        case "medium", "normal", "p2":
-            return "badge-yellow"
-        case "low", "p3":
-            return "badge-gray"
-        default:
-            return "badge-gray"
-        }
-    }
-
-    private static func fieldSortOrder(_ key: String) -> Int {
-        // Semantic ordering: identity fields first, then descriptions, then rest
-        switch key.lowercased() {
-        case "id": return 0
-        case "type", "kind", "category": return 1
-        case "description", "summary", "prompt": return 2
-        case "assignee", "author", "owner": return 3
-        case "parent", "project", "epic": return 4
-        default: return 10
-        }
-    }
+    private static let fieldOrder: [String: Int] = [
+        "id": 0,
+        "type": 1, "kind": 1, "category": 1,
+        "description": 2, "summary": 2, "prompt": 2,
+        "assignee": 3, "author": 3, "owner": 3,
+        "parent": 4, "project": 4, "epic": 4,
+    ]
 
     private static func formatFieldLabel(_ key: String) -> String {
-        // Convert snake_case/kebab-case to Title Case
-        key.split(separator: "_")
-            .flatMap { $0.split(separator: "-") }
+        key.replacingOccurrences(of: "[_-]", with: " ", options: .regularExpression)
+            .split(separator: " ")
             .map { $0.prefix(1).uppercased() + $0.dropFirst().lowercased() }
             .joined(separator: " ")
     }
 
     private static func formatValue(_ value: Any) -> String {
-        if let array = value as? [Any] {
+        switch value {
+        case let array as [Any]:
             return array.map { formatValue($0) }.joined(separator: ", ")
-        }
-        if let dict = value as? [String: Any] {
+        case let dict as [String: Any]:
             return dict.map { "\($0.key): \(formatValue($0.value))" }.joined(separator: "; ")
+        case let n as NSNumber where CFGetTypeID(n) == CFBooleanGetTypeID():
+            return n.boolValue ? "Yes" : "No"
+        default:
+            return "\(value)"
         }
-        if let bool = value as? Bool {
-            return bool ? "Yes" : "No"
-        }
-        return "\(value)"
     }
 
-    private static func escapeHTML(_ string: String) -> String {
-        HTMLUtils.escapeHTML(string)
-    }
 }

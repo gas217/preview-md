@@ -1,12 +1,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var extensionEnabled = false
-
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 20) {
             Image(systemName: "doc.richtext")
-                .font(.system(size: 64))
+                .font(.system(size: 56))
                 .foregroundStyle(Color.accentColor)
 
             Text("PreviewMD")
@@ -20,32 +18,17 @@ struct ContentView: View {
             Divider()
                 .padding(.horizontal, 40)
 
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Setup")
-                    .font(.headline)
-
-                SetupStep(
-                    number: 1,
-                    title: "Enable the extension",
-                    description: "Open System Settings > General > Login Items & Extensions > Extensions > Quick Look, then enable PreviewMD."
-                )
-
-                SetupStep(
-                    number: 2,
-                    title: "Preview markdown files",
-                    description: "Select any .md file in Finder and press Space to preview it."
-                )
-
-                SetupStep(
-                    number: 3,
-                    title: "That's it",
-                    description: "Frontmatter, tables, code blocks, and task lists are all rendered automatically."
-                )
+            VStack(alignment: .leading, spacing: 14) {
+                Tip(key: "Space", text: "Preview any .md file in Finder")
+                Tip(key: "⌥ Space", text: "Full-screen preview")
+                Tip(key: "↑↓", text: "Scroll with arrow keys")
             }
             .padding(.horizontal, 20)
 
             Button("Open Quick Look Extensions Settings") {
-                openExtensionSettings()
+                if let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") {
+                    NSWorkspace.shared.open(url)
+                }
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
@@ -57,38 +40,25 @@ struct ContentView: View {
                 .foregroundStyle(.tertiary)
         }
         .padding(32)
-        .frame(width: 500, height: 580)
-    }
-
-    private func openExtensionSettings() {
-        if let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") {
-            NSWorkspace.shared.open(url)
-        }
+        .frame(minWidth: 380, idealWidth: 440, minHeight: 340, idealHeight: 420)
     }
 }
 
-struct SetupStep: View {
-    let number: Int
-    let title: String
-    let description: String
+struct Tip: View {
+    let key: String
+    let text: String
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Text("\(number)")
-                .font(.caption)
-                .fontWeight(.bold)
-                .foregroundStyle(.white)
-                .frame(width: 22, height: 22)
-                .background(Color.accentColor)
-                .clipShape(Circle())
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .fontWeight(.semibold)
-                Text(description)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-            }
+        HStack(spacing: 12) {
+            Text(key)
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(.quaternary)
+                .cornerRadius(5)
+                .fixedSize()
+            Text(text)
+                .font(.callout)
         }
     }
 }

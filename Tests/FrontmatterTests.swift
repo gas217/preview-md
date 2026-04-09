@@ -115,3 +115,62 @@ final class FrontmatterRenderTests: XCTestCase {
         XCTAssertTrue(html.contains("badge-red"), "Blocked status and critical priority get red badges")
     }
 }
+
+final class FrontmatterParserTests: XCTestCase {
+
+    func testParsesValidFrontmatter() {
+        let input = """
+        ---
+        title: My Doc
+        status: done
+        ---
+        Content here
+        """
+        let result = FrontmatterParser.parse(input)
+        XCTAssertNotNil(result.frontmatter)
+        XCTAssertEqual(result.frontmatter?.title, "My Doc")
+        XCTAssertEqual(result.frontmatter?.status, "done")
+        XCTAssertTrue(result.content.contains("Content here"))
+    }
+
+    func testNoFrontmatter() {
+        let input = "Just content\nNo frontmatter"
+        let result = FrontmatterParser.parse(input)
+        XCTAssertNil(result.frontmatter)
+        XCTAssertEqual(result.content, input)
+    }
+
+    func testEmptyFrontmatter() {
+        let input = """
+        ---
+        ---
+        Content
+        """
+        let result = FrontmatterParser.parse(input)
+        XCTAssertNil(result.frontmatter)
+    }
+
+    func testFrontmatterWithTags() {
+        let input = """
+        ---
+        tags:
+          - one
+          - two
+          - three
+        ---
+        """
+        let result = FrontmatterParser.parse(input)
+        XCTAssertEqual(result.frontmatter?.tags, ["one", "two", "three"])
+    }
+
+    func testFrontmatterWithDates() {
+        let input = """
+        ---
+        date: 2025-01-15
+        ---
+        """
+        let result = FrontmatterParser.parse(input)
+        XCTAssertNotNil(result.frontmatter)
+        XCTAssertNotNil(result.frontmatter?.dates.first?.value)
+    }
+}

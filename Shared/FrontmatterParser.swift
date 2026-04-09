@@ -8,81 +8,74 @@ struct Frontmatter {
     let priority: String?
     let dates: [(label: String, value: String)]
     let tags: [String]
-    let raw: [String: Any]
 
-    private static let dateFields: Set<String> = [
+    static let dateFields: Set<String> = [
         "date", "created", "modified", "updated", "due", "deadline",
         "created_at", "updated_at", "published", "completed"
     ]
 
     init(raw: [String: Any]) {
-        self.raw = raw
-        self.fields = raw.sorted { $0.key < $1.key }.map { ($0.key, $0.value) }
+        self.fields = raw.map { ($0.key, $0.value) }
         self.title = raw["title"] as? String
         self.status = raw["status"] as? String
         self.priority = raw["priority"] as? String
 
-        // Collect all date fields
-        var foundDates: [(label: String, value: String)] = []
-        for key in raw.keys.sorted() {
-            guard Self.dateFields.contains(key) else { continue }
-            if let formatted = Self.formatDateValue(raw[key]) {
-                foundDates.append((label: key, value: formatted))
-            }
-        }
-        self.dates = foundDates
+        self.dates = raw.keys
+            .filter { Self.dateFields.contains($0) }
+            .sorted()
+            .compactMap { key in Self.formatDateValue(raw[key]).map { (label: key, value: $0) } }
 
-        if let tagsArray = raw["tags"] as? [String] {
-            self.tags = tagsArray
-        } else if let tagString = raw["tags"] as? String {
-            self.tags = tagString.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-        } else {
-            self.tags = []
+        switch raw["tags"] {
+        case let array as [String]: self.tags = array
+        case let string as String: self.tags = string.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+        default: self.tags = []
         }
-    }
-
-    /// Back-compat: first date value
-    var date: String? {
-        dates.first?.value
     }
 
     var isEmpty: Bool {
-        raw.isEmpty
+        fields.isEmpty
     }
 
+    private static let utcDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        f.timeStyle = .none
+        f.timeZone = TimeZone(identifier: "UTC")
+        return f
+    }()
+
+    private static let dateTimeFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        f.timeStyle = .short
+        return f
+    }()
+
+    private static let isoDateOnly: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withFullDate]
+        f.timeZone = TimeZone(identifier: "UTC")
+        return f
+    }()
+
+    private static let isoDateTime: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime]
+        f.timeZone = TimeZone.current
+        return f
+    }()
+
     private static func formatDateValue(_ value: Any?) -> String? {
-        guard let value = value else { return nil }
-        if let date = value as? Date {
-            // Yams parses date-only values as midnight UTC — format in UTC to avoid day shift
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            formatter.timeStyle = .none
-            formatter.timeZone = TimeZone(identifier: "UTC")
-            return formatter.string(from: date)
+        switch value {
+        case let date as Date:
+            return utcDateFormatter.string(from: date)
+        case let string as String where !string.isEmpty:
+            return isoDateOnly.date(from: string).map { utcDateFormatter.string(from: $0) }
+                ?? isoDateTime.date(from: string).map { dateTimeFormatter.string(from: $0) }
+                ?? string
+        default:
+            return nil
         }
-        if let string = value as? String, !string.isEmpty {
-            // Try to parse ISO date strings for nicer formatting
-            let isoFormatter = ISO8601DateFormatter()
-            isoFormatter.formatOptions = [.withFullDate]
-            isoFormatter.timeZone = TimeZone(identifier: "UTC")
-            if let date = isoFormatter.date(from: string) {
-                let display = DateFormatter()
-                display.dateStyle = .medium
-                display.timeZone = TimeZone(identifier: "UTC")
-                return display.string(from: date)
-            }
-            // Try datetime — use local TZ since time is explicit
-            isoFormatter.formatOptions = [.withInternetDateTime]
-            isoFormatter.timeZone = TimeZone.current
-            if let date = isoFormatter.date(from: string) {
-                let display = DateFormatter()
-                display.dateStyle = .medium
-                display.timeStyle = .short
-                return display.string(from: date)
-            }
-            return string
-        }
-        return nil
     }
 }
 
@@ -96,43 +89,27 @@ enum FrontmatterParser {
         // Strip UTF-8 BOM and normalize line endings
         var cleaned = input.hasPrefix("\u{FEFF}") ? String(input.dropFirst()) : input
         cleaned = cleaned.replacingOccurrences(of: "\r\n", with: "\n").replacingOccurrences(of: "\r", with: "\n")
-        let trimmed = cleaned.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard trimmed.hasPrefix("---") else {
+        guard cleaned.hasPrefix("---\n") else {
             return ParsedMarkdown(frontmatter: nil, content: cleaned)
         }
 
         let lines = cleaned.components(separatedBy: "\n")
-        guard lines.first?.trimmingCharacters(in: .whitespaces) == "---" else {
+        guard let endIndex = (1..<lines.count).first(where: { lines[$0].trimmingCharacters(in: .whitespaces) == "---" }),
+              endIndex > 1 else {
             return ParsedMarkdown(frontmatter: nil, content: cleaned)
         }
 
-        var closingIndex: Int?
-        for i in 1..<lines.count {
-            if lines[i].trimmingCharacters(in: .whitespaces) == "---" {
-                closingIndex = i
-                break
-            }
-        }
-
-        guard let endIndex = closingIndex, endIndex > 1 else {
-            return ParsedMarkdown(frontmatter: nil, content: input)
-        }
-
-        let yamlLines = lines[1..<endIndex]
-        let yamlString = yamlLines.joined(separator: "\n")
-        let contentLines = lines[(endIndex + 1)...]
-        let content = contentLines.joined(separator: "\n")
+        let yamlString = lines[1..<endIndex].joined(separator: "\n")
+        let content = lines[(endIndex + 1)...].joined(separator: "\n")
 
         do {
             if let yaml = try Yams.load(yaml: yamlString) as? [String: Any] {
-                let frontmatter = Frontmatter(raw: yaml)
-                return ParsedMarkdown(frontmatter: frontmatter.isEmpty ? nil : frontmatter, content: content)
+                let fm = Frontmatter(raw: yaml)
+                return ParsedMarkdown(frontmatter: fm.isEmpty ? nil : fm, content: content)
             }
-        } catch {
-            // Malformed YAML — treat the whole thing as content
-        }
+        } catch {}
 
-        return ParsedMarkdown(frontmatter: nil, content: input)
+        return ParsedMarkdown(frontmatter: nil, content: cleaned)
     }
 }

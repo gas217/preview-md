@@ -1,6 +1,4 @@
 import XCTest
-import Markdown
-import Yams
 
 final class MarkdownRendererTests: XCTestCase {
 
@@ -124,67 +122,63 @@ final class MarkdownRendererTests: XCTestCase {
     func testHTMLEscaping() {
         let input = "This has <script>alert('xss')</script> in it"
         let html = MarkdownRenderer.render(input)
-        // The raw <script> should be escaped
         XCTAssertFalse(html.contains("<script>alert"))
     }
-}
 
-final class FrontmatterParserTests: XCTestCase {
-
-    func testParsesValidFrontmatter() {
-        let input = """
-        ---
-        title: My Doc
-        status: done
-        ---
-        Content here
-        """
-        let result = FrontmatterParser.parse(input)
-        XCTAssertNotNil(result.frontmatter)
-        XCTAssertEqual(result.frontmatter?.title, "My Doc")
-        XCTAssertEqual(result.frontmatter?.status, "done")
-        XCTAssertTrue(result.content.contains("Content here"))
+    func testAngleBracketAutolinks() {
+        let input = "Visit <https://example.com> for more info."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("<a href="), "Angle bracket autolink renders as link")
+        XCTAssertTrue(html.contains("example.com"))
     }
 
-    func testNoFrontmatter() {
-        let input = "Just content\nNo frontmatter"
-        let result = FrontmatterParser.parse(input)
-        XCTAssertNil(result.frontmatter)
-        XCTAssertEqual(result.content, input)
+    func testBareURLsPreserved() {
+        let input = "Visit https://example.com for more info."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("https://example.com"), "Bare URL text preserved for JS auto-linking")
+        XCTAssertTrue(html.contains("urlRegex"), "Autolink JS is embedded")
     }
 
-    func testEmptyFrontmatter() {
-        let input = """
-        ---
-        ---
-        Content
-        """
-        let result = FrontmatterParser.parse(input)
-        XCTAssertNil(result.frontmatter)
+    func testNestedFormatting() {
+        let input = "This is ***bold and italic*** text."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("<strong>"))
+        XCTAssertTrue(html.contains("<em>"))
     }
 
-    func testFrontmatterWithTags() {
-        let input = """
-        ---
-        tags:
-          - one
-          - two
-          - three
-        ---
-        """
-        let result = FrontmatterParser.parse(input)
-        XCTAssertEqual(result.frontmatter?.tags, ["one", "two", "three"])
+    func testOrderedList() {
+        let input = "1. First\n2. Second\n3. Third"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("<ol>"))
+        XCTAssertTrue(html.contains("First"))
     }
 
-    func testFrontmatterWithDates() {
-        let input = """
-        ---
-        date: 2025-01-15
-        ---
-        """
-        let result = FrontmatterParser.parse(input)
-        XCTAssertNotNil(result.frontmatter)
-        // Yams may parse dates as Date objects or strings depending on format
-        XCTAssertNotNil(result.frontmatter?.date)
+    func testTableAlignment() {
+        let input = "| Left | Center | Right |\n|:-----|:------:|------:|\n| a | b | c |"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("text-align:left"))
+        XCTAssertTrue(html.contains("text-align:center"))
+        XCTAssertTrue(html.contains("text-align:right"))
+    }
+
+    func testImageRendering() {
+        let input = "![Alt text](image.png \"Title\")"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("<img"))
+        XCTAssertTrue(html.contains("alt=\"Alt text\""))
+        XCTAssertTrue(html.contains("title=\"Title\""))
+    }
+
+    func testImagePaths() {
+        let relative = MarkdownRenderer.render("![Screenshot](./assets/screenshot.png)")
+        XCTAssertTrue(relative.contains("src=\"./assets/screenshot.png\""))
+
+        let absolute = MarkdownRenderer.render("![Photo](file:///Users/test/photo.jpg)")
+        XCTAssertTrue(absolute.contains("src=\"file:///Users/test/photo.jpg\""))
+    }
+
+    func testCSPAllowsLocalImages() {
+        let html = MarkdownRenderer.render("# test")
+        XCTAssertTrue(html.contains("img-src file: data:"))
     }
 }
