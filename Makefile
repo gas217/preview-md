@@ -4,6 +4,8 @@ DERIVED = build
 APP = $(DERIVED)/Build/Products/Release/PreviewMD.app
 EXT = $(APP)/Contents/PlugIns/PreviewMDQuickLook.appex
 SIGN_ID = Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)
+BUNDLE_ID = com.previewmd.PreviewMD.QuickLook
+VERSION = $(shell /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" App/Info.plist 2>/dev/null || echo "1.0.0")
 
 build:
 	@xcodegen generate
@@ -32,9 +34,10 @@ deploy: sign
 	@rm -rf /Applications/PreviewMD.app
 	@cp -R "$(APP)" /Applications/PreviewMD.app
 	@xattr -cr /Applications/PreviewMD.app 2>/dev/null || true
-	@open /Applications/PreviewMD.app
 	@qlmanage -r 2>/dev/null || true
-	@echo "==> Deployed. Enable in System Settings > General > Login Items & Extensions."
+	@pluginkit -e use -i "$(BUNDLE_ID)" 2>/dev/null || true
+	@open /Applications/PreviewMD.app
+	@echo "==> Deployed."
 
 notarize: sign
 	@echo "==> Creating zip for notarization..."
@@ -46,9 +49,11 @@ notarize: sign
 	@xcrun stapler staple "$(APP)"
 
 release: notarize
-	@echo "==> Packaging..."
+	@echo "==> Packaging v$(VERSION)..."
 	@tar -czf /tmp/PreviewMD.tar.gz -C $(DERIVED)/Build/Products/Release PreviewMD.app
-	@echo "==> Upload /tmp/PreviewMD.tar.gz to GitHub release"
+	@gh release create "v$(VERSION)" /tmp/PreviewMD.tar.gz \
+		--title "PreviewMD v$(VERSION)" --notes "Quick Look previews for Markdown files"
+	@echo "==> Released v$(VERSION)"
 
 clean:
 	@rm -rf $(DERIVED)
