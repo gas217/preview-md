@@ -538,10 +538,15 @@ enum HTMLTemplate {
             return (s.match(open) || []).length >= (s.match(close) || []).length;
         }
         const skip = new Set(['A', 'CODE', 'PRE', 'SCRIPT']);
+        function hasSkipAncestor(node) {
+            for (var p = node.parentElement; p && p !== article; p = p.parentElement) {
+                if (skip.has(p.tagName)) return true;
+            }
+            return false;
+        }
         const walker = document.createTreeWalker(article, NodeFilter.SHOW_TEXT, {
             acceptNode: function(node) {
-                const parent = node.parentElement;
-                if (!parent || skip.has(parent.tagName)) return NodeFilter.FILTER_REJECT;
+                if (!node.parentElement || hasSkipAncestor(node)) return NodeFilter.FILTER_REJECT;
                 urlRegex.lastIndex = 0;
                 return urlRegex.test(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
             }
