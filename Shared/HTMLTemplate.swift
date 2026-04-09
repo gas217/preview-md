@@ -465,11 +465,12 @@ enum HTMLTemplate {
         // Language aliases
         const aliases = {'sh': 'bash', 'shell': 'bash', 'zsh': 'bash', 'c++': 'cpp', 'cxx': 'cpp', 'objc': 'c', 'objective-c': 'c', 'kt': 'kotlin', 'py': 'python', 'js': 'javascript', 'ts': 'typescript', 'rs': 'rust', 'rb': 'ruby'};
 
-        const hashOnlyLangs = new Set(['python', 'ruby', 'bash']);
-        const sqlCommentSrc = '(--.*$|\\/\\*[\\s\\S]*?\\*\\/)';
         const cCommentSrc = '(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/)';
-        const hashCommentSrc = '(#.*$)';
-        const phpCommentSrc = '(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/|#.*$)';
+        const commentSrc = {
+            python: '(#.*$)', ruby: '(#.*$)', bash: '(#.*$)',
+            php: cCommentSrc.slice(0,-1) + '|#.*$)',
+            sql: '(--.*$|\\/\\*[\\s\\S]*?\\*\\/)',
+        };
         const stringSrc = '("(?:[^"\\\\\\\\]|\\\\\\\\.)*"|' + "'(?:[^'\\\\\\\\]|\\\\\\\\.)*'" + '|`(?:[^`\\\\\\\\]|\\\\\\\\.)*`)';
         const numberRegex = /\\b(\\d+\\.?\\d*(?:e[+-]?\\d+)?|0x[0-9a-fA-F]+|0b[01]+|0o[0-7]+)\\b/g;
 
@@ -487,7 +488,7 @@ enum HTMLTemplate {
             const tokens = [];
 
             // Pick comment pattern based on language
-            var cmtSrc = hashOnlyLangs.has(lang) ? hashCommentSrc : (lang === 'sql' ? sqlCommentSrc : (lang === 'php' ? phpCommentSrc : cCommentSrc));
+            var cmtSrc = commentSrc[lang] || cCommentSrc;
             const combined = new RegExp(cmtSrc + '|' + stringSrc, 'gm');
 
             let lastIdx = 0;
