@@ -451,9 +451,10 @@ enum HTMLTemplate {
         const aliases = {'sh': 'bash', 'shell': 'bash', 'zsh': 'bash', 'c++': 'cpp', 'cxx': 'cpp', 'objc': 'c', 'objective-c': 'c', 'kt': 'kotlin', 'py': 'python', 'js': 'javascript', 'ts': 'typescript', 'rs': 'rust', 'rb': 'ruby'};
 
         const cCommentSrc = '(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/)';
+        const hashCmt = '(#.*$)';
         const commentSrc = {
-            python: '(#.*$)', ruby: '(#.*$)', bash: '(#.*$)',
-            php: cCommentSrc.slice(0,-1) + '|#.*$)',
+            python: hashCmt, ruby: hashCmt, bash: hashCmt,
+            php: '(\\/\\/.*$|\\/\\*[\\s\\S]*?\\*\\/|#.*$)',
             sql: '(--.*$|\\/\\*[\\s\\S]*?\\*\\/)',
         };
         const stringSrc = '("(?:[^"\\\\\\\\]|\\\\\\\\.)*"|' + "'(?:[^'\\\\\\\\]|\\\\\\\\.)*'" + '|`(?:[^`\\\\\\\\]|\\\\\\\\.)*`)';
