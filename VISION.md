@@ -33,26 +33,26 @@ Press spacebar on a markdown file and see:
 2. **Signed and notarized** — proper code signing, no Gatekeeper fights, potential App Store distribution
 3. **Local-first** — everything bundled, zero network calls, no CDN dependencies
 4. **Fast** — instant rendering, no lag on large files or workspaces
-5. **Customizable** — pluggable CSS themes, custom rendering for tags and metadata fields
+5. **Feature-rich** — admonitions, language labels, lazy images, keyboard scrolling
 6. **Open source** — MIT licensed. The community can fix what one developer can't.
 
 ## Feature Scope
 
-### V1 (MVP)
+### V1 (shipped)
 - Quick Look preview of `.md` files with proper rendering
 - CommonMark + GFM (tables, task lists, strikethrough, autolinks)
 - YAML frontmatter rendered as structured metadata block
-- Syntax-highlighted code blocks
+- Syntax highlighting for 14 languages with language labels
+- GitHub-style admonitions ([!NOTE], [!WARNING], etc.)
 - Properly signed and notarized
-- Dark mode support
-- Clean default theme
+- Dark mode support with print stylesheet
+- Keyboard scrolling (arrows, Space, Page Up/Down)
 
 ### V2
-- Custom CSS themes
 - Mermaid diagram rendering (bundled, not CDN)
 - Math rendering (KaTeX bundled, not MathJax CDN)
 - Thumbnail generation for Finder
-- Settings UI for theme/font/size preferences
+- Custom CSS themes
 
 ### Not In Scope
 - Editing (this is a previewer, not an editor)
@@ -71,15 +71,15 @@ Press spacebar on a markdown file and see:
 ## Project Layout
 
 ```
-PreviewMD/
-  App/                — host app (settings UI, about)
-  Extension/          — Quick Look preview extension
-    PreviewController  — renders markdown to HTML
-    MarkdownRenderer   — cmark-gfm wrapper + frontmatter parser
-    Themes/            — CSS themes (light, dark)
-  Shared/             — shared code between app and extension
-  Resources/          — bundled assets (fonts, CSS)
-Tests/
+App/          — SwiftUI host app (keyboard shortcut tips)
+Extension/    — Quick Look extension (QLPreviewingController + WKWebView)
+Shared/       — Rendering engine (~1050 lines)
+  MarkdownRenderer   — Pipeline: file → frontmatter + markdown → HTML
+  FrontmatterParser  — YAML extraction and structuring
+  HTMLConverter      — swift-markdown AST → HTML (MarkupVisitor)
+  HTMLTemplate       — Full HTML document with embedded CSS/JS
+  HTMLUtils          — HTML escaping
+Tests/        — 78 unit tests
 ```
 
 ## Architecture Notes
@@ -87,7 +87,8 @@ Tests/
 - Quick Look extensions use the modern `QLPreviewingController` API (not the deprecated qlgenerator plugin)
 - The extension receives a file URL, reads markdown, converts to HTML, displays in WKWebView
 - Frontmatter parsing: split on `---` delimiters, parse YAML, render as styled HTML block above the content
-- All rendering is local — no network access needed or requested in entitlements
+- All rendering is local — network.client entitlement is for WebKit only, no actual network calls
+- CSS and JS are embedded as string constants — no bundle resource loading needed
 
 ## Success Criteria
 
