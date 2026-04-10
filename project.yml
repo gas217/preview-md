@@ -7,6 +7,10 @@ options:
   createIntermediateGroups: true
   generateEmptyDirectories: true
 
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+
 schemes:
   PreviewMD:
     build:
@@ -52,8 +56,6 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         INFOPLIST_FILE: App/Info.plist
         CODE_SIGN_ENTITLEMENTS: App/PreviewMD.entitlements
-        SWIFT_VERSION: "5.9"
-        MACOSX_DEPLOYMENT_TARGET: "14.0"
         CODE_SIGN_IDENTITY: "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)"
         CODE_SIGN_STYLE: Manual
         DEVELOPMENT_TEAM: LY8G872X5U
@@ -81,8 +83,6 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         INFOPLIST_FILE: Extension/Info.plist
         CODE_SIGN_ENTITLEMENTS: Extension/PreviewMDQuickLook.entitlements
-        SWIFT_VERSION: "5.9"
-        MACOSX_DEPLOYMENT_TARGET: "14.0"
         CODE_SIGN_IDENTITY: "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)"
         CODE_SIGN_STYLE: Manual
         DEVELOPMENT_TEAM: LY8G872X5U
@@ -105,6 +105,4 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.previewmd.PreviewMDTests
-        SWIFT_VERSION: "5.9"
-        MACOSX_DEPLOYMENT_TARGET: "14.0"
         GENERATE_INFOPLIST_FILE: "YES"
