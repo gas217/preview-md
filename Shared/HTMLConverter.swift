@@ -50,6 +50,9 @@ struct HTMLConverter: MarkupVisitor {
     mutating func visitCodeBlock(_ codeBlock: CodeBlock) -> String {
         let escaped = escapeHTML(codeBlock.code)
         if let lang = codeBlock.language, !lang.isEmpty {
+            if lang.lowercased() == "mermaid" {
+                return "<div class=\"mermaid-block\"><div class=\"mermaid-header\">\u{25C7} Mermaid Diagram</div><pre><code>\(escaped)</code></pre></div>\n"
+            }
             let s = escapeHTML(lang)
             return "<pre><code class=\"language-\(s)\" data-lang=\"\(s)\">\(escaped)</code></pre>\n"
         }

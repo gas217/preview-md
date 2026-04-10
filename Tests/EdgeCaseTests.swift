@@ -260,6 +260,29 @@ final class EdgeCaseTests: XCTestCase {
         XCTAssertTrue(html.contains("<blockquote>\n"), "Regular blockquotes should not have admonition class")
     }
 
+    // MARK: - Mermaid blocks
+
+    func testMermaidBlockStyled() {
+        let input = "```mermaid\ngraph TD;\n  A-->B;\n```"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("mermaid-block"), "Mermaid code block should use styled container")
+        XCTAssertTrue(html.contains("mermaid-header"), "Mermaid block should have header")
+        XCTAssertTrue(html.contains("A--&gt;B"), "Mermaid source preserved and escaped")
+    }
+
+    func testMermaidDoesNotGetLanguageClass() {
+        let input = "```mermaid\ngraph TD;\n```"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertFalse(html.contains("language-mermaid"), "Mermaid should not get generic language class")
+    }
+
+    func testRegularCodeBlockUnaffected() {
+        let input = "```python\nprint('hi')\n```"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("language-python"), "Regular code keeps language class")
+        XCTAssertTrue(html.contains("<pre><code class=\"language-python\""), "Regular code is not wrapped in mermaid container")
+    }
+
     // MARK: - Image lazy loading
 
     func testImageLazyLoading() {
