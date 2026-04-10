@@ -93,15 +93,13 @@ struct HTMLConverter: MarkupVisitor {
         return html
     }
 
+    private static let alignCSS: [Table.ColumnAlignment: String] = [
+        .left: " style=\"text-align:left\"", .center: " style=\"text-align:center\"", .right: " style=\"text-align:right\""
+    ]
+
     private mutating func renderCells(_ cells: some Sequence<Table.Cell>, tag: String, alignments: [Table.ColumnAlignment?]) -> String {
         cells.enumerated().map { (i, cell) in
-            let align = (i < alignments.count ? alignments[i] : nil).map {
-                switch $0 {
-                case .left: return " style=\"text-align:left\""
-                case .center: return " style=\"text-align:center\""
-                case .right: return " style=\"text-align:right\""
-                }
-            } ?? ""
+            let align = (i < alignments.count ? alignments[i] : nil).flatMap { Self.alignCSS[$0] } ?? ""
             return "<\(tag)\(align)>\(visitChildren(cell))</\(tag)>\n"
         }.joined()
     }

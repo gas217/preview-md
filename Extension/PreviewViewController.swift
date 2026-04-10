@@ -28,4 +28,12 @@ class PreviewViewController: NSViewController, QLPreviewingController, WKNavigat
         webView.isHidden = false
         webView.window?.makeFirstResponder(webView)
     }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        webView.isHidden = false
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        webView.isHidden = false
+    }
 }
