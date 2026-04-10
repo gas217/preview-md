@@ -411,13 +411,9 @@ enum HTMLTemplate {
     }
 
     /* Admonitions (GitHub-style) */
-    .adm-note, .adm-tip, .adm-important, .adm-warning, .adm-caution {
-        border-radius: 6px;
-        padding: 12px 16px;
-    }
-    .adm-note      { border-color: var(--accent); background: var(--badge-blue-bg); }
+    [class^="adm-"] { border-radius: 6px; padding: 12px 16px; }
+    .adm-note, .adm-important { border-color: var(--accent); background: var(--badge-blue-bg); }
     .adm-tip       { border-color: var(--badge-green-text); background: var(--badge-green-bg); }
-    .adm-important { border-color: var(--badge-blue-text); background: var(--badge-blue-bg); }
     .adm-warning   { border-color: var(--badge-yellow-text); background: var(--badge-yellow-bg); }
     .adm-caution   { border-color: var(--badge-red-text); background: var(--badge-red-bg); }
 
