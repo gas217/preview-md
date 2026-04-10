@@ -29,8 +29,22 @@ struct HTMLConverter: MarkupVisitor {
         "<p>\(visitChildren(paragraph))</p>\n"
     }
 
+    private static let admonitions: [String: (css: String, label: String)] = [
+        "NOTE": ("adm-note", "Note"), "TIP": ("adm-tip", "Tip"),
+        "IMPORTANT": ("adm-important", "Important"),
+        "WARNING": ("adm-warning", "Warning"), "CAUTION": ("adm-caution", "Caution"),
+    ]
+
     mutating func visitBlockQuote(_ blockQuote: BlockQuote) -> String {
-        "<blockquote>\n\(visitChildren(blockQuote))</blockquote>\n"
+        var inner = visitChildren(blockQuote)
+        // Detect GitHub-style admonition in rendered HTML: <p>[!NOTE]...
+        for (key, type) in Self.admonitions {
+            let marker = "[!\(key)]"
+            guard inner.contains(marker) else { continue }
+            inner = inner.replacingOccurrences(of: marker, with: "<strong>\(type.label)</strong>")
+            return "<blockquote class=\"\(type.css)\">\n\(inner)</blockquote>\n"
+        }
+        return "<blockquote>\n\(inner)</blockquote>\n"
     }
 
     mutating func visitCodeBlock(_ codeBlock: CodeBlock) -> String {

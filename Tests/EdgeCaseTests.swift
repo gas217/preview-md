@@ -239,6 +239,29 @@ final class EdgeCaseTests: XCTestCase {
 
     // MARK: - Image lazy loading
 
+    // MARK: - Admonitions
+
+    func testGitHubAdmonitionNote() {
+        // Test the detection directly — swift-markdown wraps [!NOTE] as text inside a paragraph
+        let input = "> [!NOTE]\n> This is a note."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("class=\"adm-note\""), "Note admonition should get styled class")
+    }
+
+    func testGitHubAdmonitionWarning() {
+        let input = "> [!WARNING]\n> Be careful."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("<blockquote class=\"adm-warning\">"))
+    }
+
+    func testRegularBlockquoteUnchanged() {
+        let input = "> Just a normal quote."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("<blockquote>\n"), "Regular blockquotes should not have admonition class")
+    }
+
+    // MARK: - Image lazy loading
+
     func testImageLazyLoading() {
         let input = "![alt](image.png)"
         let html = MarkdownRenderer.render(input)
