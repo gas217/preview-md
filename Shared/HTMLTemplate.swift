@@ -116,7 +116,7 @@ enum HTMLTemplate {
     }
 
     body {
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+        font-family: -apple-system, sans-serif;
         font-size: 15px;
         line-height: 1.6;
         color: var(--text);
@@ -305,7 +305,7 @@ enum HTMLTemplate {
     /* Code */
 
     .markdown-body code {
-        font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+        font-family: ui-monospace, monospace;
         font-size: 0.88em;
         background: var(--bg-secondary);
         color: var(--text);
@@ -335,8 +335,7 @@ enum HTMLTemplate {
         position: absolute;
         top: 6px;
         right: 10px;
-        font-family: -apple-system, sans-serif;
-        font-size: 11px;
+        font: 11px -apple-system, sans-serif;
         color: var(--text-secondary);
         opacity: 0.6;
         pointer-events: none;
