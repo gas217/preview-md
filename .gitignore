@@ -28,5 +28,10 @@ Package.resolved
 *.dSYM.zip
 *.dSYM
 
+# Tools
+.claude/
+.mcp.json
+docket.yaml
+
 # Temporary
 /tmp/
