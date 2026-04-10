@@ -62,6 +62,10 @@ enum HTMLTemplate {
         --badge-gray-bg: #f0f0f2;
         --tag-bg: #e8e8ed;
         --tag-text: #48484a;
+        --hl-keyword: #d73a49;
+        --hl-string: #032f62;
+        --hl-comment: #6a737d;
+        --hl-number: #005cc5;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -87,6 +91,10 @@ enum HTMLTemplate {
             --badge-gray-bg: #38383a;
             --tag-bg: #38383a;
             --tag-text: #c7c7cc;
+            --hl-keyword: #ff7b72;
+            --hl-string: #a5d6ff;
+            --hl-comment: #8b949e;
+            --hl-number: #79c0ff;
         }
         ::selection {
             background: rgba(41, 151, 255, 0.35);
@@ -335,17 +343,10 @@ enum HTMLTemplate {
     }
 
     /* Syntax Highlighting */
-    .hljs-keyword { color: #d73a49; font-weight: 600; }
-    .hljs-string  { color: #032f62; }
-    .hljs-comment { color: #6a737d; font-style: italic; }
-    .hljs-number  { color: #005cc5; }
-
-    @media (prefers-color-scheme: dark) {
-        .hljs-keyword { color: #ff7b72; }
-        .hljs-string  { color: #a5d6ff; }
-        .hljs-comment { color: #8b949e; }
-        .hljs-number  { color: #79c0ff; }
-    }
+    .hljs-keyword { color: var(--hl-keyword); font-weight: 600; }
+    .hljs-string  { color: var(--hl-string); }
+    .hljs-comment { color: var(--hl-comment); font-style: italic; }
+    .hljs-number  { color: var(--hl-number); }
 
     /* Blockquotes */
 
@@ -408,21 +409,6 @@ enum HTMLTemplate {
         max-width: 100%;
         height: auto;
         border-radius: 6px;
-    }
-
-    /* Definition-style list in frontmatter */
-    .markdown-body dl {
-        margin-bottom: 1em;
-    }
-
-    .markdown-body dt {
-        font-weight: 600;
-        margin-top: 0.5em;
-    }
-
-    .markdown-body dd {
-        margin-left: 1em;
-        margin-bottom: 0.25em;
     }
 
     /* Strikethrough */
