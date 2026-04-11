@@ -654,6 +654,7 @@ enum HTMLTemplate {
     static let mermaidInitScript = """
     (function() {
         if (typeof mermaid === 'undefined') return;
+        function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
         var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         mermaid.initialize({
             startOnLoad: false,
@@ -670,14 +671,12 @@ enum HTMLTemplate {
                     el.removeAttribute('data-mermaid-src');
                 }).catch(function(err) {
                     el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
-                        (err && err.message ? err.message : String(err)) +
-                        '</div><pre>' +
-                        src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') +
-                        '</pre>';
+                        esc(err && err.message ? err.message : String(err)) +
+                        '</div><pre>' + esc(src) + '</pre>';
                 });
             } catch (err) {
                 el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
-                    (err && err.message ? err.message : String(err)) + '</div>';
+                    esc(err && err.message ? err.message : String(err)) + '</div>';
             }
         });
     })();
