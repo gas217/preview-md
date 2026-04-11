@@ -544,8 +544,11 @@ Append to `Tests/EdgeCaseTests.swift` (at the end of the class, before the closi
         let html = HTMLTemplate.build(frontmatter: "", content: "<p>hi</p>")
         XCTAssertFalse(html.contains("mermaid.initialize"),
                        "Plain docs must not ship the mermaid bundle")
-        XCTAssertFalse(html.contains("data-mermaid-src"),
-                       "Plain docs have no mermaid markers")
+        // NB: use trailing `="` to distinguish the real attribute from the
+        // CSS selector `.mermaid-block[data-mermaid-src]::before` which also
+        // contains the substring `data-mermaid-src` and is always in the template.
+        XCTAssertFalse(html.contains("data-mermaid-src=\""),
+                       "Plain docs have no mermaid placeholder divs")
     }
 
     func testTemplateInjectsMermaidScriptWhenHasMermaid() {
