@@ -44,12 +44,12 @@ Press spacebar on a markdown file and see:
 - YAML frontmatter rendered as structured metadata block
 - Syntax highlighting for 14 languages with language labels
 - GitHub-style admonitions ([!NOTE], [!WARNING], etc.)
+- Mermaid diagram rendering (bundled, local, strict CSP — no network, no unsafe-eval)
 - Properly signed and notarized
 - Dark mode support with print stylesheet
 - Keyboard scrolling (arrows, Space, Page Up/Down)
 
 ### V2
-- Mermaid diagram rendering (bundled, not CDN)
 - Math rendering (KaTeX bundled, not MathJax CDN)
 - Thumbnail generation for Finder
 - Custom CSS themes

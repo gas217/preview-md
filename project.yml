@@ -37,8 +37,8 @@ targets:
     sources:
       - path: App
       - path: Shared
-    resources:
       - path: Resources
+        buildPhase: resources
         excludes:
           - "**/.DS_Store"
     dependencies:
@@ -67,8 +67,8 @@ targets:
     sources:
       - path: Extension
       - path: Shared
-    resources:
       - path: Resources
+        buildPhase: resources
         excludes:
           - "**/.DS_Store"
     dependencies:
@@ -94,8 +94,8 @@ targets:
     sources:
       - path: Tests
       - path: Shared
-    resources:
       - path: Resources
+        buildPhase: resources
         excludes:
           - "**/.DS_Store"
     dependencies:
