@@ -12,18 +12,26 @@
 		147CCAC9AFF962EAC3CE3815 /* FrontmatterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */; };
 		1D60496746E2DEAFF37A007D /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		22B54D361CF3A0CCDC57E615 /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
+		2972012E56C82F3E9BCAC450 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
+		320967416B86EC2279FADFDB /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 011CF5280936C87D3EDE5B10 /* mermaid.min.js */; };
 		32A065CF61146241F2696890 /* FrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A694C150F42F5DDE63F277 /* FrontmatterTests.swift */; };
+		42FEF9E61C64676FE49B06DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
 		4443B10326EE7FC58A31536B /* HTMLTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AB33B21266EE578C0F1E19 /* HTMLTemplate.swift */; };
 		46115B7B9E34A4E1B65CA883 /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		484A43C9EF3C9186579A4F4A /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F286B07971A2B4CB87AFDC /* PerformanceTests.swift */; };
 		514A1CBFFDAB6FA237C1237E /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
 		55079A275F66648D4C827784 /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2D51C2C3AEA2024571B64E49 /* Markdown */; };
 		5AD79E746EE6D9D71A48DB41 /* HTMLTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AB33B21266EE578C0F1E19 /* HTMLTemplate.swift */; };
+		5E6AB127AB0A026CBA7A4C6F /* mermaid-source.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4C6A3756BA8156E47288C83B /* mermaid-source.txt */; };
 		5F1997E59E2E5293FC0B77FE /* HTMLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE95DD3ABC5FB85FBC042DFC /* HTMLConverter.swift */; };
+		617EECD54B15091038FBB5A9 /* MermaidBundleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F6703BF6185B989DE219BD /* MermaidBundleTests.swift */; };
 		71D46F12B23DE05D0FFD06A4 /* FrontmatterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */; };
 		738C38ADAFED8A4AFA61382B /* MarkdownRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB6CCDAF7E33E1BF1DC623E /* MarkdownRendererTests.swift */; };
+		743E99DCD12A64C7A5BB2BB5 /* mermaid-source.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4C6A3756BA8156E47288C83B /* mermaid-source.txt */; };
 		77A1A961C292BF21A0AF2351 /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
+		78538CB2C66FE52F578BDAE1 /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 011CF5280936C87D3EDE5B10 /* mermaid.min.js */; };
 		868B9E61A6AE8EEDB098AE71 /* RenderOutputTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8637625F395FD0D2B924A0E /* RenderOutputTest.swift */; };
+		95771329738D9CB8EDAD8C91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
 		9A044A17CE1F03DE696356E9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2C10BF661A8F458138B3C1 /* ContentView.swift */; };
 		A05A634F5519036CAD1C622D /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C59AC12125CCE9C6E7137C46 /* Yams */; };
 		AF4C74231743D9BBE074123D /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 7A446BB7F9FD62DD2E4E2F9B /* Markdown */; };
@@ -33,8 +41,10 @@
 		CDF8F4229DF34DB30D1C0011 /* PreviewMDApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C226C450B376D8A60EE3A180 /* PreviewMDApp.swift */; };
 		CFD063D3EE18CAD0FD24ED0A /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
 		D71E79D0799869CDACAE7E96 /* HTMLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE95DD3ABC5FB85FBC042DFC /* HTMLConverter.swift */; };
+		DB8DC353A0401059130DDA46 /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 011CF5280936C87D3EDE5B10 /* mermaid.min.js */; };
 		DEE0387E2ECFFD821F9C51DA /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 707C457C669AB75FF4F6EAD9 /* Yams */; };
 		E41FD7EC705A96B3FF90A785 /* PreviewMDQuickLook.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5E024DEA8EC7564FA12FF8D2 /* PreviewMDQuickLook.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E4B056C1BA9DAB5ED9B7C63A /* mermaid-source.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4C6A3756BA8156E47288C83B /* mermaid-source.txt */; };
 		EBE207D0FA84DBC37A659119 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A591CC9DF6694FB8570F7132 /* PreviewViewController.swift */; };
 		F2BDE5623C4132030582E96F /* EdgeCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52440575EFDDE44C1E478115 /* EdgeCaseTests.swift */; };
 		F98D58774F03382A7FB8B0D1 /* SecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D06D673012E855AA03509D5 /* SecurityTests.swift */; };
@@ -65,16 +75,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		011CF5280936C87D3EDE5B10 /* mermaid.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = mermaid.min.js; sourceTree = "<group>"; };
 		128298E0D85817EAFE1DBE08 /* PreviewMD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PreviewMD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB6CCDAF7E33E1BF1DC623E /* MarkdownRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownRendererTests.swift; sourceTree = "<group>"; };
 		3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontmatterParser.swift; sourceTree = "<group>"; };
 		385C277257CA6E41325FAB5E /* PreviewMD.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PreviewMD.entitlements; sourceTree = "<group>"; };
 		3981BDC6EE02160491C71C02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		48D257C31A5F1C6D5F91C1D5 /* PreviewMDQuickLook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PreviewMDQuickLook.entitlements; sourceTree = "<group>"; };
+		4C6A3756BA8156E47288C83B /* mermaid-source.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "mermaid-source.txt"; sourceTree = "<group>"; };
 		52440575EFDDE44C1E478115 /* EdgeCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeCaseTests.swift; sourceTree = "<group>"; };
 		5E024DEA8EC7564FA12FF8D2 /* PreviewMDQuickLook.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PreviewMDQuickLook.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D06D673012E855AA03509D5 /* SecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityTests.swift; sourceTree = "<group>"; };
 		7199341AAC078B6346ABCA8F /* PreviewMDTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PreviewMDTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		78F6703BF6185B989DE219BD /* MermaidBundleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MermaidBundleTests.swift; sourceTree = "<group>"; };
 		87F286B07971A2B4CB87AFDC /* PerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		89A694C150F42F5DDE63F277 /* FrontmatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontmatterTests.swift; sourceTree = "<group>"; };
 		A591CC9DF6694FB8570F7132 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
@@ -85,6 +98,7 @@
 		C8637625F395FD0D2B924A0E /* RenderOutputTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderOutputTest.swift; sourceTree = "<group>"; };
 		DF2C10BF661A8F458138B3C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EE95DD3ABC5FB85FBC042DFC /* HTMLConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLConverter.swift; sourceTree = "<group>"; };
+		F131B3758770864BA4688E1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB3D63BD719C8C4938FFD775 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,6 +138,7 @@
 			children = (
 				5F552239D1C4D7EEF84EE013 /* App */,
 				A57AA7A0E58C03D5DB9CB281 /* Extension */,
+				FC0AF3CE95094D372983F0F9 /* Resources */,
 				A042A4892FDE1D20D4872ED1 /* Shared */,
 				81EC849377C44925494EEB99 /* Tests */,
 				66F8BACF71D464767A6CF9E9 /* Products */,
@@ -157,6 +172,7 @@
 				52440575EFDDE44C1E478115 /* EdgeCaseTests.swift */,
 				89A694C150F42F5DDE63F277 /* FrontmatterTests.swift */,
 				1AB6CCDAF7E33E1BF1DC623E /* MarkdownRendererTests.swift */,
+				78F6703BF6185B989DE219BD /* MermaidBundleTests.swift */,
 				87F286B07971A2B4CB87AFDC /* PerformanceTests.swift */,
 				C8637625F395FD0D2B924A0E /* RenderOutputTest.swift */,
 				6D06D673012E855AA03509D5 /* SecurityTests.swift */,
@@ -186,6 +202,16 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		FC0AF3CE95094D372983F0F9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F131B3758770864BA4688E1D /* Assets.xcassets */,
+				4C6A3756BA8156E47288C83B /* mermaid-source.txt */,
+				011CF5280936C87D3EDE5B10 /* mermaid.min.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -194,6 +220,7 @@
 			buildConfigurationList = 339FDAE98CF160D3C07BE6AC /* Build configuration list for PBXNativeTarget "PreviewMDQuickLook" */;
 			buildPhases = (
 				B36180F93BF26B63C909B472 /* Sources */,
+				353B2C6FAB9100C5DD6307BC /* Resources */,
 				7ED182E344986CB083AFBA96 /* Frameworks */,
 			);
 			buildRules = (
@@ -214,6 +241,7 @@
 			buildConfigurationList = EB7C676A7F7DEF647471EC50 /* Build configuration list for PBXNativeTarget "PreviewMD" */;
 			buildPhases = (
 				5E1C8F698133940016FC7EC5 /* Sources */,
+				077A801CCC3DEEC9E9E078DE /* Resources */,
 				3F310EDC52346A348C9CE504 /* Frameworks */,
 				6FDA379C8C803C7343C6881A /* Embed Foundation Extensions */,
 			);
@@ -236,6 +264,7 @@
 			buildConfigurationList = 84FA606D2F6A4C9EEEF4DC1B /* Build configuration list for PBXNativeTarget "PreviewMDTests" */;
 			buildPhases = (
 				F3262C9A794DA317770336C6 /* Sources */,
+				158290D651AB5227E2C05EBA /* Resources */,
 				555873AABF1E79C21BE4B324 /* Frameworks */,
 			);
 			buildRules = (
@@ -295,6 +324,39 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		077A801CCC3DEEC9E9E078DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2972012E56C82F3E9BCAC450 /* Assets.xcassets in Resources */,
+				743E99DCD12A64C7A5BB2BB5 /* mermaid-source.txt in Resources */,
+				320967416B86EC2279FADFDB /* mermaid.min.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		158290D651AB5227E2C05EBA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95771329738D9CB8EDAD8C91 /* Assets.xcassets in Resources */,
+				E4B056C1BA9DAB5ED9B7C63A /* mermaid-source.txt in Resources */,
+				DB8DC353A0401059130DDA46 /* mermaid.min.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		353B2C6FAB9100C5DD6307BC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				42FEF9E61C64676FE49B06DC /* Assets.xcassets in Resources */,
+				5E6AB127AB0A026CBA7A4C6F /* mermaid-source.txt in Resources */,
+				78538CB2C66FE52F578BDAE1 /* mermaid.min.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5E1C8F698133940016FC7EC5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -335,6 +397,7 @@
 				77A1A961C292BF21A0AF2351 /* HTMLUtils.swift in Sources */,
 				22B54D361CF3A0CCDC57E615 /* MarkdownRenderer.swift in Sources */,
 				738C38ADAFED8A4AFA61382B /* MarkdownRendererTests.swift in Sources */,
+				617EECD54B15091038FBB5A9 /* MermaidBundleTests.swift in Sources */,
 				484A43C9EF3C9186579A4F4A /* PerformanceTests.swift in Sources */,
 				868B9E61A6AE8EEDB098AE71 /* RenderOutputTest.swift in Sources */,
 				F98D58774F03382A7FB8B0D1 /* SecurityTests.swift in Sources */,

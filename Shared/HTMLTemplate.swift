@@ -1,8 +1,33 @@
 import Foundation
 
+private final class HTMLTemplateBundleLocator {}
+
 enum HTMLTemplate {
-    static func build(frontmatter: String, content: String) -> String {
+    static let mermaidScript: String = {
+        let bundle = Bundle(for: HTMLTemplateBundleLocator.self)
+        guard let url = bundle.url(forResource: "mermaid.min", withExtension: "js"),
+              let data = try? Data(contentsOf: url),
+              let str = String(data: data, encoding: .utf8) else {
+            return ""
+        }
+        return str
+    }()
+
+    static func build(frontmatter: String, content: String, hasMermaid: Bool = false) -> String {
         let nonce = generateNonce()
+        let mermaidTag: String
+        if hasMermaid && !mermaidScript.isEmpty {
+            mermaidTag = """
+            <script nonce="\(nonce)">
+            \(mermaidScript)
+            </script>
+            <script nonce="\(nonce)">
+            \(mermaidInitScript)
+            </script>
+            """
+        } else {
+            mermaidTag = ""
+        }
         return """
         <!DOCTYPE html>
         <html>
@@ -24,6 +49,7 @@ enum HTMLTemplate {
         document.body.setAttribute('tabindex', '0');
         document.body.focus();
         </script>
+        \(mermaidTag)
         </body>
         </html>
         """
@@ -410,24 +436,43 @@ enum HTMLTemplate {
         border-radius: 6px;
     }
 
-    /* Mermaid diagram blocks */
+    /* Mermaid diagrams */
     .mermaid-block {
-        margin-bottom: 1em;
-        border: 1px solid var(--border);
-        border-left: 3px solid var(--accent);
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    .mermaid-header {
+        margin: 1em 0;
+        padding: 16px;
         background: var(--bg-secondary);
-        border-bottom: 1px solid var(--border);
-        padding: 6px 16px;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--accent);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        text-align: center;
+        overflow-x: auto;
     }
-    .mermaid-block pre {
-        border: none; border-radius: 0; margin-bottom: 0;
+    .mermaid-block[data-mermaid-src]::before {
+        content: "Rendering diagram…";
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-style: italic;
+    }
+    .mermaid-block svg {
+        max-width: 100%;
+        height: auto;
+    }
+    .mermaid-error {
+        color: var(--badge-red-text);
+        background: var(--badge-red-bg);
+        padding: 8px 12px;
+        border-radius: 4px;
+        text-align: left;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+    .mermaid-error + pre {
+        text-align: left;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 8px 12px;
+        font-size: 12px;
+        overflow-x: auto;
     }
 
     /* Admonitions (GitHub-style) */
@@ -600,6 +645,53 @@ enum HTMLTemplate {
                 frag.appendChild(document.createTextNode(text.slice(lastIndex)));
             }
             node.parentNode.replaceChild(frag, node);
+        });
+    })();
+    """
+
+    // MARK: - Mermaid Init Script
+
+    static let mermaidInitScript = """
+    (function() {
+        if (typeof mermaid === 'undefined') return;
+        function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+        var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        mermaid.initialize({
+            startOnLoad: false,
+            securityLevel: 'strict',
+            theme: dark ? 'dark' : 'default',
+            fontFamily: '-apple-system, sans-serif'
+        });
+        // Suppress mermaid's default error diagram (we render our own below).
+        mermaid.parseError = function() {};
+        var blocks = document.querySelectorAll('.mermaid-block[data-mermaid-src]');
+        blocks.forEach(function(el, i) {
+            var src = el.dataset.mermaidSrc;
+            var id = 'mermaid-svg-' + i;
+            // mermaid v11 abandons #d<id> scratch div on failure; remove it.
+            function cleanup() {
+                var scratch = document.getElementById('d' + id);
+                if (scratch) scratch.remove();
+            }
+            try {
+                mermaid.render(id, src).then(function(result) {
+                    el.innerHTML = result.svg;
+                    el.removeAttribute('data-mermaid-src');
+                    cleanup();
+                }).catch(function(err) {
+                    // Drop [data-mermaid-src]::before "Rendering..." placeholder.
+                    el.removeAttribute('data-mermaid-src');
+                    el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
+                        esc(err && err.message ? err.message : String(err)) +
+                        '</div><pre>' + esc(src) + '</pre>';
+                    cleanup();
+                });
+            } catch (err) {
+                el.removeAttribute('data-mermaid-src');
+                el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
+                    esc(err && err.message ? err.message : String(err)) + '</div>';
+                cleanup();
+            }
         });
     })();
     """
