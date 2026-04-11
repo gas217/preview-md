@@ -352,4 +352,18 @@ final class EdgeCaseTests: XCTestCase {
         XCTAssertTrue(html.contains("script-src 'nonce-"),
                       "CSP must still use nonce-based script-src")
     }
+
+    func testRendererInjectsMermaidBundleWhenDocumentHasMermaid() {
+        let input = "# Hi\n\n```mermaid\ngraph TD; A-->B\n```\n"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("mermaid.initialize"),
+                      "Renderer must trip hasMermaid when a mermaid block is present")
+    }
+
+    func testRendererOmitsMermaidBundleForPlainDoc() {
+        let input = "# Hi\n\n```python\nprint('hi')\n```\n"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertFalse(html.contains("mermaid.initialize"),
+                       "Renderer must not inject mermaid bundle when no mermaid block")
+    }
 }

@@ -14,9 +14,20 @@ enum MarkdownRenderer {
         let parsed = FrontmatterParser.parse(input)
         let frontmatterHTML = renderFrontmatter(parsed.frontmatter)
         let document = Document(parsing: parsed.content)
+        let hasMermaid = documentHasMermaid(document)
         var converter = HTMLConverter()
         let contentHTML = converter.visit(document)
-        return HTMLTemplate.build(frontmatter: frontmatterHTML, content: contentHTML)
+        return HTMLTemplate.build(frontmatter: frontmatterHTML, content: contentHTML, hasMermaid: hasMermaid)
+    }
+
+    private static func documentHasMermaid(_ markup: any Markup) -> Bool {
+        if let code = markup as? CodeBlock, code.language?.lowercased() == "mermaid" {
+            return true
+        }
+        for child in markup.children {
+            if documentHasMermaid(child) { return true }
+        }
+        return false
     }
 
     private static func renderFrontmatter(_ frontmatter: Frontmatter?) -> String {
