@@ -662,6 +662,7 @@ enum HTMLTemplate {
             theme: dark ? 'dark' : 'default',
             fontFamily: '-apple-system, sans-serif'
         });
+        mermaid.parseError = function() {}; // suppress built-in error diagram; we render our own
         var blocks = document.querySelectorAll('.mermaid-block[data-mermaid-src]');
         blocks.forEach(function(el, i) {
             var src = el.dataset.mermaidSrc;
@@ -670,11 +671,13 @@ enum HTMLTemplate {
                     el.innerHTML = result.svg;
                     el.removeAttribute('data-mermaid-src');
                 }).catch(function(err) {
+                    el.removeAttribute('data-mermaid-src');
                     el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
                         esc(err && err.message ? err.message : String(err)) +
                         '</div><pre>' + esc(src) + '</pre>';
                 });
             } catch (err) {
+                el.removeAttribute('data-mermaid-src');
                 el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
                     esc(err && err.message ? err.message : String(err)) + '</div>';
             }
