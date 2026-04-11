@@ -410,26 +410,6 @@ enum HTMLTemplate {
         border-radius: 6px;
     }
 
-    /* Mermaid diagram blocks */
-    .mermaid-block {
-        margin-bottom: 1em;
-        border: 1px solid var(--border);
-        border-left: 3px solid var(--accent);
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    .mermaid-header {
-        background: var(--bg-secondary);
-        border-bottom: 1px solid var(--border);
-        padding: 6px 16px;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--accent);
-    }
-    .mermaid-block pre {
-        border: none; border-radius: 0; margin-bottom: 0;
-    }
-
     /* Admonitions (GitHub-style) */
     [class^="adm-"] { border-radius: 6px; padding: 12px 16px; }
     .adm-note, .adm-important { border-color: var(--accent); background: var(--badge-blue-bg); }

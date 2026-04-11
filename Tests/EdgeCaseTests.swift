@@ -262,25 +262,49 @@ final class EdgeCaseTests: XCTestCase {
 
     // MARK: - Mermaid blocks
 
-    func testMermaidBlockStyled() {
+    func testMermaidBlockEmitsPlaceholderWithDataAttr() {
         let input = "```mermaid\ngraph TD;\n  A-->B;\n```"
         let html = MarkdownRenderer.render(input)
-        XCTAssertTrue(html.contains("mermaid-block"), "Mermaid code block should use styled container")
-        XCTAssertTrue(html.contains("mermaid-header"), "Mermaid block should have header")
-        XCTAssertTrue(html.contains("A--&gt;B"), "Mermaid source preserved and escaped")
+        XCTAssertTrue(html.contains("class=\"mermaid-block\""),
+                      "Mermaid block should use .mermaid-block container")
+        XCTAssertTrue(html.contains("data-mermaid-src=\""),
+                      "Mermaid block should carry source in data-mermaid-src")
+        XCTAssertTrue(html.contains("graph TD;"),
+                      "Mermaid source must be preserved (HTML-escaped) in the data attribute")
+    }
+
+    func testMermaidSourceIsHTMLEscapedInDataAttribute() {
+        let input = "```mermaid\ngraph LR; A-->B & \"C\"\n```"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("A--&gt;B &amp; &quot;C&quot;"),
+                      "Mermaid source must be HTML-escaped inside data-mermaid-src")
+        XCTAssertFalse(html.contains("data-mermaid-src=\"graph LR; A-->B & \"C\""),
+                       "Unescaped quotes would break the attribute")
+    }
+
+    func testMermaidDoesNotEmitLegacyHeader() {
+        let input = "```mermaid\ngraph TD;\n```"
+        let html = MarkdownRenderer.render(input)
+        XCTAssertFalse(html.contains("mermaid-header"),
+                       "Old 'mermaid-header' div should be gone — init JS handles labeling")
+        XCTAssertFalse(html.contains("Mermaid Diagram"),
+                       "Old header text should be gone")
     }
 
     func testMermaidDoesNotGetLanguageClass() {
         let input = "```mermaid\ngraph TD;\n```"
         let html = MarkdownRenderer.render(input)
-        XCTAssertFalse(html.contains("language-mermaid"), "Mermaid should not get generic language class")
+        XCTAssertFalse(html.contains("language-mermaid"),
+                       "Mermaid should not get generic language class")
     }
 
     func testRegularCodeBlockUnaffected() {
         let input = "```python\nprint('hi')\n```"
         let html = MarkdownRenderer.render(input)
-        XCTAssertTrue(html.contains("language-python"), "Regular code keeps language class")
-        XCTAssertTrue(html.contains("<pre><code class=\"language-python\""), "Regular code is not wrapped in mermaid container")
+        XCTAssertFalse(html.contains("mermaid-block"),
+                       "Python block must not be wrapped in mermaid container")
+        XCTAssertTrue(html.contains("<pre><code class=\"language-python\""),
+                      "Regular code keeps its language class")
     }
 
     // MARK: - Image lazy loading
