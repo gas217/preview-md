@@ -301,8 +301,12 @@ final class EdgeCaseTests: XCTestCase {
     func testRegularCodeBlockUnaffected() {
         let input = "```python\nprint('hi')\n```"
         let html = MarkdownRenderer.render(input)
-        XCTAssertFalse(html.contains("mermaid-block"),
+        // NB: the substring "mermaid-block" now appears in the template CSS,
+        // so match on the emitted-element form instead.
+        XCTAssertFalse(html.contains("class=\"mermaid-block\""),
                        "Python block must not be wrapped in mermaid container")
+        XCTAssertFalse(html.contains("data-mermaid-src=\""),
+                       "Python block must not carry a mermaid data attribute")
         XCTAssertTrue(html.contains("<pre><code class=\"language-python\""),
                       "Regular code keeps its language class")
     }
@@ -313,5 +317,39 @@ final class EdgeCaseTests: XCTestCase {
         let input = "![alt](image.png)"
         let html = MarkdownRenderer.render(input)
         XCTAssertTrue(html.contains("loading=\"lazy\""), "Images should have lazy loading")
+    }
+
+    // MARK: - Mermaid injection in HTMLTemplate
+
+    func testTemplateOmitsMermaidScriptWhenNoDiagrams() {
+        let html = HTMLTemplate.build(frontmatter: "", content: "<p>hi</p>")
+        XCTAssertFalse(html.contains("mermaid.initialize"),
+                       "Plain docs must not ship the mermaid bundle")
+        // NB: use trailing `="` to distinguish the real attribute from the
+        // CSS selector `.mermaid-block[data-mermaid-src]::before` which also
+        // contains the substring `data-mermaid-src` and is always in the template.
+        XCTAssertFalse(html.contains("data-mermaid-src=\""),
+                       "Plain docs have no mermaid placeholder divs")
+    }
+
+    func testTemplateInjectsMermaidScriptWhenHasMermaid() {
+        let html = HTMLTemplate.build(frontmatter: "", content: "<div class=\"mermaid-block\" data-mermaid-src=\"graph TD\"></div>", hasMermaid: true)
+        XCTAssertTrue(html.contains("mermaid.initialize"),
+                      "hasMermaid=true must inject init script")
+        XCTAssertTrue(html.contains("mermaid-svg-"),
+                      "init script must reference mermaid-svg- id prefix")
+    }
+
+    func testTemplateMermaidScriptIsLargeEnough() {
+        XCTAssertGreaterThan(HTMLTemplate.mermaidScript.count, 1_000_000,
+                             "Vendored mermaid.min.js must be at least 1 MB when loaded")
+    }
+
+    func testTemplateCSPStillForbidsUnsafeEval() {
+        let html = HTMLTemplate.build(frontmatter: "", content: "<div class=\"mermaid-block\" data-mermaid-src=\"graph TD\"></div>", hasMermaid: true)
+        XCTAssertFalse(html.contains("'unsafe-eval'"),
+                       "CSP must never include unsafe-eval")
+        XCTAssertTrue(html.contains("script-src 'nonce-"),
+                      "CSP must still use nonce-based script-src")
     }
 }

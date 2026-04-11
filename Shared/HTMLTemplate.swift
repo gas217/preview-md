@@ -1,8 +1,33 @@
 import Foundation
 
+private final class HTMLTemplateBundleLocator {}
+
 enum HTMLTemplate {
-    static func build(frontmatter: String, content: String) -> String {
+    static let mermaidScript: String = {
+        let bundle = Bundle(for: HTMLTemplateBundleLocator.self)
+        guard let url = bundle.url(forResource: "mermaid.min", withExtension: "js"),
+              let data = try? Data(contentsOf: url),
+              let str = String(data: data, encoding: .utf8) else {
+            return ""
+        }
+        return str
+    }()
+
+    static func build(frontmatter: String, content: String, hasMermaid: Bool = false) -> String {
         let nonce = generateNonce()
+        let mermaidTag: String
+        if hasMermaid && !mermaidScript.isEmpty {
+            mermaidTag = """
+            <script nonce="\(nonce)">
+            \(mermaidScript)
+            </script>
+            <script nonce="\(nonce)">
+            \(mermaidInitScript)
+            </script>
+            """
+        } else {
+            mermaidTag = ""
+        }
         return """
         <!DOCTYPE html>
         <html>
@@ -24,6 +49,7 @@ enum HTMLTemplate {
         document.body.setAttribute('tabindex', '0');
         document.body.focus();
         </script>
+        \(mermaidTag)
         </body>
         </html>
         """
@@ -410,6 +436,45 @@ enum HTMLTemplate {
         border-radius: 6px;
     }
 
+    /* Mermaid diagrams */
+    .mermaid-block {
+        margin: 1em 0;
+        padding: 16px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        text-align: center;
+        overflow-x: auto;
+    }
+    .mermaid-block[data-mermaid-src]::before {
+        content: "Rendering diagram…";
+        color: var(--text-secondary);
+        font-size: 13px;
+        font-style: italic;
+    }
+    .mermaid-block svg {
+        max-width: 100%;
+        height: auto;
+    }
+    .mermaid-error {
+        color: var(--badge-red-text);
+        background: var(--badge-red-bg);
+        padding: 8px 12px;
+        border-radius: 4px;
+        text-align: left;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+    .mermaid-error + pre {
+        text-align: left;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 8px 12px;
+        font-size: 12px;
+        overflow-x: auto;
+    }
+
     /* Admonitions (GitHub-style) */
     [class^="adm-"] { border-radius: 6px; padding: 12px 16px; }
     .adm-note, .adm-important { border-color: var(--accent); background: var(--badge-blue-bg); }
@@ -580,6 +645,40 @@ enum HTMLTemplate {
                 frag.appendChild(document.createTextNode(text.slice(lastIndex)));
             }
             node.parentNode.replaceChild(frag, node);
+        });
+    })();
+    """
+
+    // MARK: - Mermaid Init Script
+
+    static let mermaidInitScript = """
+    (function() {
+        if (typeof mermaid === 'undefined') return;
+        var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        mermaid.initialize({
+            startOnLoad: false,
+            securityLevel: 'strict',
+            theme: dark ? 'dark' : 'default',
+            fontFamily: '-apple-system, sans-serif'
+        });
+        var blocks = document.querySelectorAll('.mermaid-block[data-mermaid-src]');
+        blocks.forEach(function(el, i) {
+            var src = el.dataset.mermaidSrc;
+            try {
+                mermaid.render('mermaid-svg-' + i, src).then(function(result) {
+                    el.innerHTML = result.svg;
+                    el.removeAttribute('data-mermaid-src');
+                }).catch(function(err) {
+                    el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
+                        (err && err.message ? err.message : String(err)) +
+                        '</div><pre>' +
+                        src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') +
+                        '</pre>';
+                });
+            } catch (err) {
+                el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
+                    (err && err.message ? err.message : String(err)) + '</div>';
+            }
         });
     })();
     """
