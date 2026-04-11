@@ -14,6 +14,7 @@ curl -sSL github.com/gas217/preview-md/releases/latest/download/install.sh | sh
 
 - **Frontmatter-aware** — YAML frontmatter renders as structured metadata: title prominent, status/priority as colored badges, dates formatted, tags as pills
 - **Full GFM** — Tables (with column alignment), task lists, strikethrough, autolinks, fenced code blocks, blockquotes, admonitions (`[!NOTE]`, `[!WARNING]`, etc.)
+- **Mermaid diagrams** — ` ```mermaid ` blocks render as SVG locally. No CDN, no `unsafe-eval` — the bundle is patched and ships under the same strict CSP as the rest of the preview
 - **Syntax highlighting** — Swift, Python, JavaScript, TypeScript, Go, Rust, Ruby, C, C++, Java, Kotlin, PHP, Bash, SQL
 - **Dark mode** — Automatic light/dark theme via `prefers-color-scheme`
 - **Keyboard scrolling** — Arrow keys, Space, Page Up/Down. Option+Space for full-screen preview
