@@ -379,4 +379,21 @@ final class EdgeCaseTests: XCTestCase {
                           "Walker should detect mermaid in \(name): \(input)")
         }
     }
+
+    func testMermaidSampleFixtureRendersToHTMLAndWritesToTmp() throws {
+        let fixture = """
+        # Mermaid rendering smoke test
+
+        ```mermaid
+        graph TD
+            A[Start] --> B{Go?}
+            B -->|Yes| C[Done]
+        ```
+        """
+        let html = MarkdownRenderer.render(fixture)
+        XCTAssertTrue(html.contains("mermaid.initialize"))
+        let url = URL(fileURLWithPath: "/tmp/previewmd-mermaid-out.html")
+        try html.write(to: url, atomically: true, encoding: .utf8)
+        print("WROTE: \(url.path)")
+    }
 }
