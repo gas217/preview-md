@@ -366,4 +366,17 @@ final class EdgeCaseTests: XCTestCase {
         XCTAssertFalse(html.contains("mermaid.initialize"),
                        "Renderer must not inject mermaid bundle when no mermaid block")
     }
+
+    func testRendererDetectsMermaidInNestedContexts() {
+        let cases = [
+            ("blockquote",    "> ```mermaid\n> graph TD; A-->B\n> ```\n"),
+            ("list item",     "- item\n\n  ```mermaid\n  graph TD; A-->B\n  ```\n"),
+            ("uppercase tag", "```MERMAID\ngraph TD; A-->B\n```\n"),
+        ]
+        for (name, input) in cases {
+            let html = MarkdownRenderer.render(input)
+            XCTAssertTrue(html.contains("mermaid.initialize"),
+                          "Walker should detect mermaid in \(name): \(input)")
+        }
+    }
 }
