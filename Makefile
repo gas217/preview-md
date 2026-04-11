@@ -1,4 +1,9 @@
-.PHONY: build test deploy release notarize clean
+.PHONY: build test deploy release notarize clean vendor-mermaid
+
+MERMAID_VERSION = 11.14.0
+MERMAID_URL = https://unpkg.com/mermaid@$(MERMAID_VERSION)/dist/mermaid.min.js
+MERMAID_DST = Resources/mermaid.min.js
+MERMAID_PROV = Resources/mermaid-source.txt
 
 DERIVED = build
 APP = $(DERIVED)/Build/Products/Release/PreviewMD.app
@@ -54,6 +59,29 @@ release: notarize
 	@gh release create "v$(VERSION)" /tmp/PreviewMD.tar.gz \
 		--title "PreviewMD v$(VERSION)" --notes "Quick Look previews for Markdown files"
 	@echo "==> Released v$(VERSION)"
+
+vendor-mermaid:
+	@echo "==> Fetching mermaid@$(MERMAID_VERSION)..."
+	@curl -fsSL "$(MERMAID_URL)" -o /tmp/mermaid.raw.js
+	@UPSTREAM_SHA=$$(shasum -a 256 /tmp/mermaid.raw.js | awk '{print $$1}'); \
+	 echo "    upstream sha256: $$UPSTREAM_SHA"; \
+	 COUNT=$$(grep -c 'Function("return this")' /tmp/mermaid.raw.js); \
+	 if [ "$$COUNT" -lt 1 ]; then \
+	   echo "ERROR: no Function(\"return this\") calls found — did upstream fix it? Check manually."; \
+	   exit 1; \
+	 fi; \
+	 echo "    found $$COUNT Function(\"return this\") occurrences"; \
+	 sed 's/Function("return this")()/globalThis/g; s/Function("return this")/(function(){return globalThis})/g' /tmp/mermaid.raw.js > "$(MERMAID_DST)"; \
+	 REMAIN=$$(grep -c 'Function("return this")' "$(MERMAID_DST)" || true); \
+	 if [ "$$REMAIN" != "0" ]; then \
+	   echo "ERROR: $$REMAIN Function(\"return this\") calls remain after patch"; \
+	   exit 1; \
+	 fi; \
+	 PATCHED_SHA=$$(shasum -a 256 "$(MERMAID_DST)" | awk '{print $$1}'); \
+	 printf "source: %s\nupstream_sha256: %s\npatched_sha256: %s\npatch: sed 's/Function(\"return this\")()/globalThis/g; s/Function(\"return this\")/(function(){return globalThis})/g'\n" \
+	   "$(MERMAID_URL)" "$$UPSTREAM_SHA" "$$PATCHED_SHA" > "$(MERMAID_PROV)"
+	@rm -f /tmp/mermaid.raw.js
+	@echo "==> Wrote $(MERMAID_DST) ($$(wc -c < $(MERMAID_DST) | tr -d ' ') bytes) + $(MERMAID_PROV)"
 
 clean:
 	@rm -rf $(DERIVED)

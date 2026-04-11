@@ -1,0 +1,4 @@
+source: https://unpkg.com/mermaid@11.14.0/dist/mermaid.min.js
+upstream_sha256: 217b66ef4279c33c141b4afe22effad10a91c02558dc70917be2c0981e78ed87
+patched_sha256: 099041668b54a86ca63fa02b398f4a5c3514fb97b67fdf32822c5ac1333b36b1
+patch: sed 's/Function("return this")()/globalThis/g; s/Function("return this")/(function(){return globalThis})/g'
