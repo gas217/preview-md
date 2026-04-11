@@ -666,20 +666,28 @@ enum HTMLTemplate {
         var blocks = document.querySelectorAll('.mermaid-block[data-mermaid-src]');
         blocks.forEach(function(el, i) {
             var src = el.dataset.mermaidSrc;
+            var id = 'mermaid-svg-' + i;
+            function cleanup() {
+                var scratch = document.getElementById('d' + id);
+                if (scratch) scratch.remove();
+            }
             try {
-                mermaid.render('mermaid-svg-' + i, src).then(function(result) {
+                mermaid.render(id, src).then(function(result) {
                     el.innerHTML = result.svg;
                     el.removeAttribute('data-mermaid-src');
+                    cleanup();
                 }).catch(function(err) {
                     el.removeAttribute('data-mermaid-src');
                     el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
                         esc(err && err.message ? err.message : String(err)) +
                         '</div><pre>' + esc(src) + '</pre>';
+                    cleanup();
                 });
             } catch (err) {
                 el.removeAttribute('data-mermaid-src');
                 el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
                     esc(err && err.message ? err.message : String(err)) + '</div>';
+                cleanup();
             }
         });
     })();
