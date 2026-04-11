@@ -662,11 +662,13 @@ enum HTMLTemplate {
             theme: dark ? 'dark' : 'default',
             fontFamily: '-apple-system, sans-serif'
         });
-        mermaid.parseError = function() {}; // suppress built-in error diagram; we render our own
+        // Suppress mermaid's default error diagram (we render our own below).
+        mermaid.parseError = function() {};
         var blocks = document.querySelectorAll('.mermaid-block[data-mermaid-src]');
         blocks.forEach(function(el, i) {
             var src = el.dataset.mermaidSrc;
             var id = 'mermaid-svg-' + i;
+            // mermaid v11 abandons #d<id> scratch div on failure; remove it.
             function cleanup() {
                 var scratch = document.getElementById('d' + id);
                 if (scratch) scratch.remove();
@@ -677,6 +679,7 @@ enum HTMLTemplate {
                     el.removeAttribute('data-mermaid-src');
                     cleanup();
                 }).catch(function(err) {
+                    // Drop [data-mermaid-src]::before "Rendering..." placeholder.
                     el.removeAttribute('data-mermaid-src');
                     el.innerHTML = '<div class="mermaid-error"><strong>Mermaid error:</strong> ' +
                         esc(err && err.message ? err.message : String(err)) +

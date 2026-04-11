@@ -399,7 +399,6 @@ final class EdgeCaseTests: XCTestCase {
 
     func testMermaidFullFixtureRendersToTmp() throws {
         let cwd = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
-        // Walk up from test runtime cwd to find the repo root containing TestFiles/
         var dir = cwd
         for _ in 0..<6 {
             let candidate = dir.appendingPathComponent("TestFiles/mermaid-sample.md")
@@ -413,16 +412,6 @@ final class EdgeCaseTests: XCTestCase {
             }
             dir.deleteLastPathComponent()
         }
-        // If we can't find the fixture from cwd, try the absolute repo path (works when tests run from build dir)
-        let absolute = URL(fileURLWithPath: "/Users/ag/Repoes/preview-md/TestFiles/mermaid-sample.md")
-        if FileManager.default.fileExists(atPath: absolute.path) {
-            let html = try MarkdownRenderer.render(fileAt: absolute)
-            XCTAssertTrue(html.contains("mermaid.initialize"))
-            let out = URL(fileURLWithPath: "/tmp/previewmd-mermaid-full.html")
-            try html.write(to: out, atomically: true, encoding: .utf8)
-            print("WROTE: \(out.path)")
-            return
-        }
-        throw XCTSkip("TestFiles/mermaid-sample.md not found; run from repo root")
+        throw XCTSkip("TestFiles/mermaid-sample.md not found via cwd walk-up; run from repo root")
     }
 }
