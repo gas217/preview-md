@@ -28,6 +28,10 @@ test:
 	@xcrun xctest $(DERIVED)/Build/Products/Debug/PreviewMDTests.xctest
 
 sign: build
+	@echo "==> Bundling updater scripts..."
+	@cp scripts/check-update.sh "$(APP)/Contents/Resources/"
+	@cp scripts/com.previewmd.updater.plist "$(APP)/Contents/Resources/"
+	@chmod +x "$(APP)/Contents/Resources/check-update.sh"
 	@echo "==> Signing..."
 	@codesign --force --options runtime --sign "$(SIGN_ID)" \
 		--entitlements Extension/PreviewMDQuickLook.entitlements "$(EXT)"
@@ -41,8 +45,13 @@ deploy: sign
 	@xattr -cr /Applications/PreviewMD.app 2>/dev/null || true
 	@qlmanage -r 2>/dev/null || true
 	@pluginkit -e use -i "$(BUNDLE_ID)" 2>/dev/null || true
+	@echo "==> Installing auto-updater LaunchAgent..."
+	@mkdir -p ~/Library/LaunchAgents
+	@cp /Applications/PreviewMD.app/Contents/Resources/com.previewmd.updater.plist ~/Library/LaunchAgents/
+	@launchctl unload ~/Library/LaunchAgents/com.previewmd.updater.plist 2>/dev/null || true
+	@launchctl load ~/Library/LaunchAgents/com.previewmd.updater.plist
 	@open /Applications/PreviewMD.app
-	@echo "==> Deployed."
+	@echo "==> Deployed (auto-updater active, checking every 5 min)."
 
 notarize: sign
 	@echo "==> Creating zip for notarization..."
