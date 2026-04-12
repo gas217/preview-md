@@ -17,6 +17,7 @@ schemes:
       targets:
         PreviewMD: all
         PreviewMDQuickLook: all
+        PreviewMDThumbnail: all
         PreviewMDTests: [test]
     test:
       targets:
@@ -44,6 +45,9 @@ targets:
           - "mermaid-source.txt"
     dependencies:
       - target: PreviewMDQuickLook
+        embed: true
+        codeSign: true
+      - target: PreviewMDThumbnail
         embed: true
         codeSign: true
       - package: swift-markdown
@@ -85,6 +89,29 @@ targets:
         CURRENT_PROJECT_VERSION: "2"
         INFOPLIST_FILE: Extension/Info.plist
         CODE_SIGN_ENTITLEMENTS: Extension/PreviewMDQuickLook.entitlements
+        CODE_SIGN_IDENTITY: "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)"
+        CODE_SIGN_STYLE: Manual
+        DEVELOPMENT_TEAM: LY8G872X5U
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"
+
+  PreviewMDThumbnail:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: Thumbnail
+      - path: Shared
+    dependencies:
+      - package: swift-markdown
+        product: Markdown
+      - package: Yams
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.previewmd.PreviewMD.Thumbnail
+        PRODUCT_NAME: PreviewMDThumbnail
+        MARKETING_VERSION: "1.1.0"
+        CURRENT_PROJECT_VERSION: "2"
+        INFOPLIST_FILE: Thumbnail/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Thumbnail/PreviewMDThumbnail.entitlements
         CODE_SIGN_IDENTITY: "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)"
         CODE_SIGN_STYLE: Manual
         DEVELOPMENT_TEAM: LY8G872X5U
