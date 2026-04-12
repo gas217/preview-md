@@ -19,9 +19,7 @@
 		230894C298C6032C80418FCD /* katex.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 690801C3B192D27E60E4C92C /* katex.min.js */; };
 		2972012E56C82F3E9BCAC450 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
 		2DB024D93E5F5614289B1504 /* katex.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 06719F7618F0B6AE97E9E3FC /* katex.min.css */; };
-		320967416B86EC2279FADFDB /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 011CF5280936C87D3EDE5B10 /* mermaid.min.js */; };
 		32A065CF61146241F2696890 /* FrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A694C150F42F5DDE63F277 /* FrontmatterTests.swift */; };
-		3B7AAE1689A7861D550EC03D /* katex.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 690801C3B192D27E60E4C92C /* katex.min.js */; };
 		42FEF9E61C64676FE49B06DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
 		4443B10326EE7FC58A31536B /* HTMLTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AB33B21266EE578C0F1E19 /* HTMLTemplate.swift */; };
 		46115B7B9E34A4E1B65CA883 /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
@@ -44,7 +42,6 @@
 		9337FDE87D95AD791497113A /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 1347F4184863627EB010F26A /* Markdown */; };
 		95771329738D9CB8EDAD8C91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
 		97507A360517F3591072BB2F /* PreviewMDThumbnail.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D6826AAE447B6F552797261C /* PreviewMDThumbnail.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9853F090B6BE29282ADB5B24 /* katex.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 06719F7618F0B6AE97E9E3FC /* katex.min.css */; };
 		9A044A17CE1F03DE696356E9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2C10BF661A8F458138B3C1 /* ContentView.swift */; };
 		A05A634F5519036CAD1C622D /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C59AC12125CCE9C6E7137C46 /* Yams */; };
 		AF4C74231743D9BBE074123D /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 7A446BB7F9FD62DD2E4E2F9B /* Markdown */; };
@@ -54,7 +51,6 @@
 		C53061391ED82B31C6E19394 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 58CE3FC94799F4C79C5A5F4F /* Yams */; };
 		C86BA5CF2203CA5EDB4464BA /* katex-auto-render.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 0CA62D252D916F79AB63CF28 /* katex-auto-render.min.js */; };
 		CDF8F4229DF34DB30D1C0011 /* PreviewMDApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C226C450B376D8A60EE3A180 /* PreviewMDApp.swift */; };
-		CFB21B3F8A216D7B519BA426 /* katex-auto-render.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 0CA62D252D916F79AB63CF28 /* katex-auto-render.min.js */; };
 		CFD063D3EE18CAD0FD24ED0A /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
 		D71E79D0799869CDACAE7E96 /* HTMLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE95DD3ABC5FB85FBC042DFC /* HTMLConverter.swift */; };
 		DB8DC353A0401059130DDA46 /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 011CF5280936C87D3EDE5B10 /* mermaid.min.js */; };
@@ -411,10 +407,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2972012E56C82F3E9BCAC450 /* Assets.xcassets in Resources */,
-				CFB21B3F8A216D7B519BA426 /* katex-auto-render.min.js in Resources */,
-				9853F090B6BE29282ADB5B24 /* katex.min.css in Resources */,
-				3B7AAE1689A7861D550EC03D /* katex.min.js in Resources */,
-				320967416B86EC2279FADFDB /* mermaid.min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

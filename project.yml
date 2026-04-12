@@ -43,6 +43,10 @@ targets:
         excludes:
           - "**/.DS_Store"
           - "mermaid-source.txt"
+          - "mermaid.min.js"
+          - "katex.min.js"
+          - "katex-auto-render.min.js"
+          - "katex.min.css"
     dependencies:
       - target: PreviewMDQuickLook
         embed: true
