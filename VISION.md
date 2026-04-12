@@ -51,12 +51,13 @@ Press spacebar on a markdown file and see:
 
 ### V2
 - Math rendering (KaTeX bundled, not MathJax CDN)
-- Thumbnail generation for Finder
+- Finder thumbnail provider (QLThumbnailProvider) — rendered markdown in Finder's preview pane, Gallery view, column view, and file icons instead of generic text icon
 - Custom CSS themes
+- Auto-updater improvements (background check without host app)
 
 ### Not In Scope
-- Editing (this is a previewer, not an editor)
-- Wikilinks / Obsidian compatibility (maybe later)
+- Editing — this is a previewer. The editor is a separate product (see ~/Repoes/md-editor)
+- Wikilinks / Obsidian compatibility
 - Non-markdown formats
 
 ## Tech Stack
@@ -71,15 +72,17 @@ Press spacebar on a markdown file and see:
 ## Project Layout
 
 ```
-App/          — SwiftUI host app (keyboard shortcut tips)
+App/          — SwiftUI host app (onboarding, extension status, auto-updater)
 Extension/    — Quick Look extension (QLPreviewingController + WKWebView)
-Shared/       — Rendering engine (~1050 lines)
+Shared/       — Rendering engine (~1185 lines)
   MarkdownRenderer   — Pipeline: file → frontmatter + markdown → HTML
   FrontmatterParser  — YAML extraction and structuring
   HTMLConverter      — swift-markdown AST → HTML (MarkupVisitor)
-  HTMLTemplate       — Full HTML document with embedded CSS/JS
+  HTMLTemplate       — Full HTML document with embedded CSS/JS + conditional mermaid
   HTMLUtils          — HTML escaping
-Tests/        — 78 unit tests
+Resources/    — Vendored mermaid.min.js (patched for CSP), app icon
+Tests/        — 94 unit tests
+scripts/      — Auto-updater (check-update.sh, LaunchAgent plist), icon generator
 ```
 
 ## Architecture Notes
@@ -88,7 +91,7 @@ Tests/        — 78 unit tests
 - The extension receives a file URL, reads markdown, converts to HTML, displays in WKWebView
 - Frontmatter parsing: split on `---` delimiters, parse YAML, render as styled HTML block above the content
 - All rendering is local — network.client entitlement is for WebKit only, no actual network calls
-- CSS and JS are embedded as string constants — no bundle resource loading needed
+- CSS and small JS are embedded as string constants; mermaid.min.js (3MB) is loaded from bundle at runtime
 
 ## Success Criteria
 
