@@ -4,10 +4,10 @@ final class MarkdownRendererTests: XCTestCase {
 
     func testBasicMarkdown() {
         let input = "# Hello World\n\nThis is a paragraph."
-        let html = MarkdownRenderer.render(input)
-        XCTAssertTrue(html.contains("<h1"))
-        XCTAssertTrue(html.contains("Hello World"))
-        XCTAssertTrue(html.contains("<p>This is a paragraph.</p>"))
+        let body = bodyHTML(MarkdownRenderer.render(input))
+        XCTAssertTrue(body.contains("<h1"))
+        XCTAssertTrue(body.contains("Hello World"))
+        XCTAssertTrue(body.contains("<p>This is a paragraph.</p>"))
     }
 
     func testFrontmatterParsing() {
@@ -26,13 +26,14 @@ final class MarkdownRendererTests: XCTestCase {
         Some text.
         """
         let html = MarkdownRenderer.render(input)
-        XCTAssertTrue(html.contains("Test Document"))
-        XCTAssertTrue(html.contains("fm-title"))
-        XCTAssertTrue(html.contains("in progress"))
-        XCTAssertTrue(html.contains("badge-blue"))
-        XCTAssertTrue(html.contains("badge-orange"))
-        XCTAssertTrue(html.contains("swift"))
-        XCTAssertTrue(html.contains("fm-tag"))
+        let fm = frontmatterHTML(html)
+        XCTAssertTrue(fm.contains("Test Document"))
+        XCTAssertTrue(fm.contains("fm-title"))
+        XCTAssertTrue(fm.contains("in progress"))
+        XCTAssertTrue(fm.contains("badge-blue"))
+        XCTAssertTrue(fm.contains("badge-orange"))
+        XCTAssertTrue(fm.contains("swift"))
+        XCTAssertTrue(fm.contains("fm-tag"))
     }
 
     func testNoFrontmatter() {
@@ -49,11 +50,11 @@ final class MarkdownRendererTests: XCTestCase {
         | foo  | bar   |
         | baz  | qux   |
         """
-        let html = MarkdownRenderer.render(input)
-        XCTAssertTrue(html.contains("<table>"))
-        XCTAssertTrue(html.contains("<th>"))
-        XCTAssertTrue(html.contains("foo"))
-        XCTAssertTrue(html.contains("bar"))
+        let body = bodyHTML(MarkdownRenderer.render(input))
+        XCTAssertTrue(body.contains("<table>"))
+        XCTAssertTrue(body.contains("<th>"))
+        XCTAssertTrue(body.contains("foo"))
+        XCTAssertTrue(body.contains("bar"))
     }
 
     func testTaskList() {
@@ -61,11 +62,11 @@ final class MarkdownRendererTests: XCTestCase {
         - [x] Done task
         - [ ] Pending task
         """
-        let html = MarkdownRenderer.render(input)
-        XCTAssertTrue(html.contains("task-list"))
-        XCTAssertTrue(html.contains("checked"))
-        XCTAssertTrue(html.contains("Done task"))
-        XCTAssertTrue(html.contains("Pending task"))
+        let body = bodyHTML(MarkdownRenderer.render(input))
+        XCTAssertTrue(body.contains("task-list"))
+        XCTAssertTrue(body.contains("checked"))
+        XCTAssertTrue(body.contains("Done task"))
+        XCTAssertTrue(body.contains("Pending task"))
     }
 
     func testCodeBlock() {
@@ -74,23 +75,23 @@ final class MarkdownRendererTests: XCTestCase {
         let x = 42
         ```
         """
-        let html = MarkdownRenderer.render(input)
-        XCTAssertTrue(html.contains("language-swift"))
-        XCTAssertTrue(html.contains("let x = 42"))
+        let body = bodyHTML(MarkdownRenderer.render(input))
+        XCTAssertTrue(body.contains("language-swift"))
+        XCTAssertTrue(body.contains("let x = 42"))
     }
 
     func testStrikethrough() {
         let input = "This is ~~deleted~~ text."
-        let html = MarkdownRenderer.render(input)
-        XCTAssertTrue(html.contains("<del>"))
-        XCTAssertTrue(html.contains("deleted"))
+        let body = bodyHTML(MarkdownRenderer.render(input))
+        XCTAssertTrue(body.contains("<del>"))
+        XCTAssertTrue(body.contains("deleted"))
     }
 
     func testBlockquote() {
         let input = "> This is a quote"
-        let html = MarkdownRenderer.render(input)
-        XCTAssertTrue(html.contains("<blockquote>"))
-        XCTAssertTrue(html.contains("This is a quote"))
+        let body = bodyHTML(MarkdownRenderer.render(input))
+        XCTAssertTrue(body.contains("<blockquote>"))
+        XCTAssertTrue(body.contains("This is a quote"))
     }
 
     func testHTMLStructure() {
