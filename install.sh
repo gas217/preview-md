@@ -4,7 +4,6 @@ set -e
 REPO="gas217/preview-md"
 DEST="/Applications/PreviewMD.app"
 BUNDLE_ID="com.previewmd.PreviewMD.QuickLook"
-THUMB_ID="com.previewmd.PreviewMD.Thumbnail"
 PLIST_NAME="com.previewmd.updater.plist"
 PLIST_SRC="$DEST/Contents/Resources/$PLIST_NAME"
 PLIST_DST="$HOME/Library/LaunchAgents/$PLIST_NAME"
@@ -18,7 +17,6 @@ xattr -cr "$DEST" 2>/dev/null || true
 open "$DEST"
 qlmanage -r >/dev/null 2>&1 || true
 pluginkit -e use -i "$BUNDLE_ID" 2>/dev/null || true
-pluginkit -e use -i "$THUMB_ID" 2>/dev/null || true
 
 # Install auto-updater LaunchAgent (checks every 5 min)
 if [ -f "$PLIST_SRC" ]; then
