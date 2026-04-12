@@ -3,9 +3,9 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack(spacing: 20) {
-            Image(systemName: "doc.richtext")
-                .font(.system(size: 56))
-                .foregroundStyle(Color.accentColor)
+            Image(nsImage: NSApp.applicationIconImage)
+                .resizable()
+                .frame(width: 96, height: 96)
 
             Text("PreviewMD")
                 .font(.largeTitle)

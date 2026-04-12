@@ -12,10 +12,13 @@
 		147CCAC9AFF962EAC3CE3815 /* FrontmatterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */; };
 		1D60496746E2DEAFF37A007D /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		22B54D361CF3A0CCDC57E615 /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
+		2972012E56C82F3E9BCAC450 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
 		320967416B86EC2279FADFDB /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 011CF5280936C87D3EDE5B10 /* mermaid.min.js */; };
 		32A065CF61146241F2696890 /* FrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A694C150F42F5DDE63F277 /* FrontmatterTests.swift */; };
+		42FEF9E61C64676FE49B06DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
 		4443B10326EE7FC58A31536B /* HTMLTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AB33B21266EE578C0F1E19 /* HTMLTemplate.swift */; };
 		46115B7B9E34A4E1B65CA883 /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
+		4829A491C996620946AF7371 /* AppIcon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 7EA1C9E6E6553136BA707801 /* AppIcon.iconset */; };
 		484A43C9EF3C9186579A4F4A /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F286B07971A2B4CB87AFDC /* PerformanceTests.swift */; };
 		514A1CBFFDAB6FA237C1237E /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
 		55079A275F66648D4C827784 /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2D51C2C3AEA2024571B64E49 /* Markdown */; };
@@ -27,7 +30,9 @@
 		77A1A961C292BF21A0AF2351 /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		78538CB2C66FE52F578BDAE1 /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 011CF5280936C87D3EDE5B10 /* mermaid.min.js */; };
 		868B9E61A6AE8EEDB098AE71 /* RenderOutputTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8637625F395FD0D2B924A0E /* RenderOutputTest.swift */; };
+		95771329738D9CB8EDAD8C91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
 		9A044A17CE1F03DE696356E9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2C10BF661A8F458138B3C1 /* ContentView.swift */; };
+		9DB6388D9515C9EDEEC904EB /* AppIcon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 7EA1C9E6E6553136BA707801 /* AppIcon.iconset */; };
 		A05A634F5519036CAD1C622D /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C59AC12125CCE9C6E7137C46 /* Yams */; };
 		AF4C74231743D9BBE074123D /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 7A446BB7F9FD62DD2E4E2F9B /* Markdown */; };
 		B5E586AFF385CC52B40A6E9E /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 109A784BFAE5FFAB1C16E4B3 /* Markdown */; };
@@ -40,6 +45,7 @@
 		DEE0387E2ECFFD821F9C51DA /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 707C457C669AB75FF4F6EAD9 /* Yams */; };
 		E41FD7EC705A96B3FF90A785 /* PreviewMDQuickLook.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5E024DEA8EC7564FA12FF8D2 /* PreviewMDQuickLook.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EBE207D0FA84DBC37A659119 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A591CC9DF6694FB8570F7132 /* PreviewViewController.swift */; };
+		EC1E0FFF1B0F0C80A4C5E200 /* AppIcon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = 7EA1C9E6E6553136BA707801 /* AppIcon.iconset */; };
 		F2BDE5623C4132030582E96F /* EdgeCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52440575EFDDE44C1E478115 /* EdgeCaseTests.swift */; };
 		F98D58774F03382A7FB8B0D1 /* SecurityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D06D673012E855AA03509D5 /* SecurityTests.swift */; };
 /* End PBXBuildFile section */
@@ -81,6 +87,7 @@
 		6D06D673012E855AA03509D5 /* SecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityTests.swift; sourceTree = "<group>"; };
 		7199341AAC078B6346ABCA8F /* PreviewMDTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PreviewMDTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		78F6703BF6185B989DE219BD /* MermaidBundleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MermaidBundleTests.swift; sourceTree = "<group>"; };
+		7EA1C9E6E6553136BA707801 /* AppIcon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = AppIcon.iconset; sourceTree = "<group>"; };
 		87F286B07971A2B4CB87AFDC /* PerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceTests.swift; sourceTree = "<group>"; };
 		89A694C150F42F5DDE63F277 /* FrontmatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontmatterTests.swift; sourceTree = "<group>"; };
 		A591CC9DF6694FB8570F7132 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +98,7 @@
 		C8637625F395FD0D2B924A0E /* RenderOutputTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderOutputTest.swift; sourceTree = "<group>"; };
 		DF2C10BF661A8F458138B3C1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EE95DD3ABC5FB85FBC042DFC /* HTMLConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLConverter.swift; sourceTree = "<group>"; };
+		F131B3758770864BA4688E1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB3D63BD719C8C4938FFD775 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -197,6 +205,8 @@
 		FC0AF3CE95094D372983F0F9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7EA1C9E6E6553136BA707801 /* AppIcon.iconset */,
+				F131B3758770864BA4688E1D /* Assets.xcassets */,
 				011CF5280936C87D3EDE5B10 /* mermaid.min.js */,
 			);
 			path = Resources;
@@ -319,6 +329,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9DB6388D9515C9EDEEC904EB /* AppIcon.iconset in Resources */,
+				2972012E56C82F3E9BCAC450 /* Assets.xcassets in Resources */,
 				320967416B86EC2279FADFDB /* mermaid.min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -327,6 +339,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC1E0FFF1B0F0C80A4C5E200 /* AppIcon.iconset in Resources */,
+				95771329738D9CB8EDAD8C91 /* Assets.xcassets in Resources */,
 				DB8DC353A0401059130DDA46 /* mermaid.min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -335,6 +349,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4829A491C996620946AF7371 /* AppIcon.iconset in Resources */,
+				42FEF9E61C64676FE49B06DC /* Assets.xcassets in Resources */,
 				78538CB2C66FE52F578BDAE1 /* mermaid.min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
