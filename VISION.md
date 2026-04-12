@@ -45,15 +45,16 @@ Press spacebar on a markdown file and see:
 - Syntax highlighting for 14 languages with language labels
 - GitHub-style admonitions ([!NOTE], [!WARNING], etc.)
 - Mermaid diagram rendering (bundled, local, strict CSP — no network, no unsafe-eval)
+- Math/LaTeX rendering (KaTeX bundled, fonts inlined as data: URIs, CSP-safe)
+- App icon, refreshed onboarding with extension + auto-updater status
+- LaunchAgent auto-updater (ETag-based, 5 min interval)
 - Properly signed and notarized
 - Dark mode support with print stylesheet
 - Keyboard scrolling (arrows, Space, Page Up/Down)
 
 ### V2
-- Math rendering (KaTeX bundled, not MathJax CDN)
-- Finder thumbnail provider (QLThumbnailProvider) — rendered markdown in Finder's preview pane, Gallery view, column view, and file icons instead of generic text icon
+- Finder thumbnail provider (QLThumbnailProvider) — rendered markdown in Finder's preview pane, Gallery view, column view, and file icons instead of generic text icon (foundation shipped, UTI priority WIP)
 - Custom CSS themes
-- Auto-updater improvements (background check without host app)
 
 ### Not In Scope
 - Editing — this is a previewer. The editor is a separate product (see ~/Repoes/md-editor)
