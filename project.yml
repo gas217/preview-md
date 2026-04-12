@@ -41,6 +41,7 @@ targets:
         buildPhase: resources
         excludes:
           - "**/.DS_Store"
+          - "mermaid-source.txt"
     dependencies:
       - target: PreviewMDQuickLook
         embed: true
@@ -71,6 +72,7 @@ targets:
         buildPhase: resources
         excludes:
           - "**/.DS_Store"
+          - "mermaid-source.txt"
     dependencies:
       - package: swift-markdown
         product: Markdown
@@ -98,6 +100,7 @@ targets:
         buildPhase: resources
         excludes:
           - "**/.DS_Store"
+          - "mermaid-source.txt"
     dependencies:
       - package: swift-markdown
         product: Markdown
