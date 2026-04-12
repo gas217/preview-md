@@ -2,6 +2,12 @@ import XCTest
 
 final class EdgeCaseTests: XCTestCase {
 
+    private func bodyHTML(_ html: String) -> String {
+        guard let start = html.range(of: "<article class=\"markdown-body\">"),
+              let end = html.range(of: "</article>") else { return html }
+        return String(html[start.upperBound..<end.lowerBound])
+    }
+
     // MARK: - Heading with inline formatting
 
     func testHeadingWithBold() {
@@ -284,10 +290,10 @@ final class EdgeCaseTests: XCTestCase {
 
     func testMermaidDoesNotEmitLegacyHeader() {
         let input = "```mermaid\ngraph TD;\n```"
-        let html = MarkdownRenderer.render(input)
-        XCTAssertFalse(html.contains("mermaid-header"),
+        let body = bodyHTML(MarkdownRenderer.render(input))
+        XCTAssertFalse(body.contains("mermaid-header"),
                        "Old 'mermaid-header' div should be gone — init JS handles labeling")
-        XCTAssertFalse(html.contains("Mermaid Diagram"),
+        XCTAssertFalse(body.contains("Mermaid Diagram"),
                        "Old header text should be gone")
     }
 
@@ -300,14 +306,12 @@ final class EdgeCaseTests: XCTestCase {
 
     func testRegularCodeBlockUnaffected() {
         let input = "```python\nprint('hi')\n```"
-        let html = MarkdownRenderer.render(input)
-        // NB: the substring "mermaid-block" now appears in the template CSS,
-        // so match on the emitted-element form instead.
-        XCTAssertFalse(html.contains("class=\"mermaid-block\""),
+        let body = bodyHTML(MarkdownRenderer.render(input))
+        XCTAssertFalse(body.contains("mermaid-block"),
                        "Python block must not be wrapped in mermaid container")
-        XCTAssertFalse(html.contains("data-mermaid-src=\""),
+        XCTAssertFalse(body.contains("data-mermaid-src"),
                        "Python block must not carry a mermaid data attribute")
-        XCTAssertTrue(html.contains("<pre><code class=\"language-python\""),
+        XCTAssertTrue(body.contains("<pre><code class=\"language-python\""),
                       "Regular code keeps its language class")
     }
 
