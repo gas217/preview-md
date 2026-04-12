@@ -36,3 +36,4 @@ docket.yaml
 # Temporary
 /tmp/
 scripts/setup-notarytool.sh
+scripts/setup-notarytool.sh
