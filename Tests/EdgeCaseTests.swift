@@ -482,4 +482,27 @@ final class EdgeCaseTests: XCTestCase {
         try html.write(to: url, atomically: true, encoding: .utf8)
         print("Written: \(url.path) (\(html.count) chars)")
     }
+
+    // MARK: - Single-dollar math detection
+
+    func testSingleDollarMathDetected() {
+        let input = "The value $x^2 + y^2$ is always positive."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("renderMathInElement"),
+                      "Single-dollar math like $x^2$ should trigger KaTeX")
+    }
+
+    func testDollarAmountNotDetectedAsMath() {
+        let input = "The price is $5 and the total is $100."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertFalse(html.contains("renderMathInElement"),
+                       "Dollar amounts like $5 or $100 should not trigger KaTeX")
+    }
+
+    func testMixedDollarsAndMath() {
+        let input = "It costs $5 but $x^2$ is math."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("renderMathInElement"),
+                      "Document with both prices and math should detect the math")
+    }
 }

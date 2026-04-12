@@ -22,7 +22,11 @@ enum MarkdownRenderer {
     }
 
     private static func contentHasMath(_ content: String) -> Bool {
-        content.contains("$$") || content.contains("\\(") || content.contains("\\[")
+        if content.contains("$$") || content.contains("\\(") || content.contains("\\[") {
+            return true
+        }
+        // Single-dollar: match $<non-digit>..$ but not prices like $5 or $100
+        return content.range(of: "\\$[^\\d$][^$]+\\$", options: .regularExpression) != nil
     }
 
     private static func documentHasMermaid(_ markup: any Markup) -> Bool {
