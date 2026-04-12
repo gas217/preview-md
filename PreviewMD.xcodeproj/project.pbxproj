@@ -525,14 +525,14 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = LY8G872X5U;
 				INFOPLIST_FILE = App/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.previewmd.PreviewMD;
 				PRODUCT_NAME = PreviewMD;
 				SDKROOT = macosx;
@@ -547,14 +547,14 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = LY8G872X5U;
 				INFOPLIST_FILE = App/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.previewmd.PreviewMD;
 				PRODUCT_NAME = PreviewMD;
 				SDKROOT = macosx;
@@ -568,11 +568,11 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = LY8G872X5U;
 				INFOPLIST_FILE = Thumbnail/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.previewmd.PreviewMD.Thumbnail;
 				PRODUCT_NAME = PreviewMDThumbnail;
 				SDKROOT = macosx;
@@ -586,11 +586,11 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = LY8G872X5U;
 				INFOPLIST_FILE = Extension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.previewmd.PreviewMD.QuickLook;
 				PRODUCT_NAME = PreviewMDQuickLook;
 				SDKROOT = macosx;
@@ -692,11 +692,11 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = LY8G872X5U;
 				INFOPLIST_FILE = Thumbnail/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.previewmd.PreviewMD.Thumbnail;
 				PRODUCT_NAME = PreviewMDThumbnail;
 				SDKROOT = macosx;
@@ -710,11 +710,11 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = LY8G872X5U;
 				INFOPLIST_FILE = Extension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.previewmd.PreviewMD.QuickLook;
 				PRODUCT_NAME = PreviewMDQuickLook;
 				SDKROOT = macosx;
