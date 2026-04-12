@@ -10,7 +10,7 @@ APP = $(DERIVED)/Build/Products/Release/PreviewMD.app
 EXT = $(APP)/Contents/PlugIns/PreviewMDQuickLook.appex
 SIGN_ID = Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)
 BUNDLE_ID = com.previewmd.PreviewMD.QuickLook
-VERSION = $(shell /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" App/Info.plist 2>/dev/null || echo "1.0.0")
+VERSION = $(shell grep 'MARKETING_VERSION:' project.yml | head -1 | sed 's/.*"\(.*\)"/\1/')
 
 build:
 	@xcodegen generate
