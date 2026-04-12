@@ -384,38 +384,44 @@ final class EdgeCaseTests: XCTestCase {
         }
     }
 
-    func testMermaidSampleFixtureRendersToHTMLAndWritesToTmp() throws {
-        let fixture = """
-        # Mermaid rendering smoke test
+    // MARK: - Mermaid fixture rendering (follows RenderOutputTest pattern)
 
-        ```mermaid
-        graph TD
-            A[Start] --> B{Go?}
-            B -->|Yes| C[Done]
-        ```
-        """
-        let html = MarkdownRenderer.render(fixture)
-        XCTAssertTrue(html.contains("mermaid.initialize"))
-        let url = URL(fileURLWithPath: "/tmp/previewmd-mermaid-out.html")
-        try html.write(to: url, atomically: true, encoding: .utf8)
-        print("WROTE: \(url.path)")
-    }
-
-    func testMermaidFullFixtureRendersToTmp() throws {
-        let cwd = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
-        var dir = cwd
-        for _ in 0..<6 {
-            let candidate = dir.appendingPathComponent("TestFiles/mermaid-sample.md")
-            if FileManager.default.fileExists(atPath: candidate.path) {
-                let html = try MarkdownRenderer.render(fileAt: candidate)
-                XCTAssertTrue(html.contains("mermaid.initialize"))
-                let out = URL(fileURLWithPath: "/tmp/previewmd-mermaid-full.html")
-                try html.write(to: out, atomically: true, encoding: .utf8)
-                print("WROTE: \(out.path)")
-                return
-            }
-            dir.deleteLastPathComponent()
+    func testMermaidFixtureRenders() throws {
+        let path = URL(fileURLWithPath: #file)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("TestFiles/mermaid-sample.md")
+        guard FileManager.default.fileExists(atPath: path.path) else {
+            throw XCTSkip("TestFiles/mermaid-sample.md not found relative to \(#file)")
         }
-        throw XCTSkip("TestFiles/mermaid-sample.md not found via cwd walk-up; run from repo root")
+        let html = try MarkdownRenderer.render(fileAt: path)
+        let body = bodyHTML(html)
+
+        // Bundle injected (document has mermaid blocks)
+        XCTAssertTrue(html.contains("mermaid.initialize"),
+                      "Mermaid bundle must be injected for a document with mermaid blocks")
+
+        // All 3 placeholder divs emitted
+        let placeholderCount = body.components(separatedBy: "data-mermaid-src=\"").count - 1
+        XCTAssertEqual(placeholderCount, 3,
+                       "Fixture has 3 mermaid blocks; got \(placeholderCount) placeholders")
+
+        // Each diagram's source is preserved in the placeholder
+        XCTAssertTrue(body.contains("graph TD"), "Flowchart source preserved")
+        XCTAssertTrue(body.contains("sequenceDiagram"), "Sequence source preserved")
+        XCTAssertTrue(body.contains("not valid mermaid syntax"), "Broken source preserved")
+
+        // Frontmatter rendered
+        XCTAssertTrue(html.contains("Mermaid Sample"), "Frontmatter title rendered")
+        XCTAssertTrue(html.contains("fm-badge"), "Status badge rendered")
+
+        // Prose after diagrams survives
+        XCTAssertTrue(body.contains("Regular prose after the diagrams should still render fine."),
+                      "Trailing prose must not be swallowed by mermaid blocks")
+
+        // Write to /tmp for manual browser inspection
+        try html.write(to: URL(fileURLWithPath: "/tmp/previewmd-mermaid-full.html"),
+                       atomically: true, encoding: .utf8)
+        print("Written: /tmp/previewmd-mermaid-full.html (\(html.count) chars)")
     }
 }
