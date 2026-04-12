@@ -15,9 +15,14 @@ enum MarkdownRenderer {
         let frontmatterHTML = renderFrontmatter(parsed.frontmatter)
         let document = Document(parsing: parsed.content)
         let hasMermaid = documentHasMermaid(document)
+        let hasMath = contentHasMath(parsed.content)
         var converter = HTMLConverter()
         let contentHTML = converter.visit(document)
-        return HTMLTemplate.build(frontmatter: frontmatterHTML, content: contentHTML, hasMermaid: hasMermaid)
+        return HTMLTemplate.build(frontmatter: frontmatterHTML, content: contentHTML, hasMermaid: hasMermaid, hasMath: hasMath)
+    }
+
+    private static func contentHasMath(_ content: String) -> Bool {
+        content.contains("$$") || content.contains("\\(") || content.contains("\\[")
     }
 
     private static func documentHasMermaid(_ markup: any Markup) -> Bool {

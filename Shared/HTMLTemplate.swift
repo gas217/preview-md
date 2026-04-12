@@ -3,6 +3,36 @@ import Foundation
 private final class HTMLTemplateBundleLocator {}
 
 enum HTMLTemplate {
+    static let katexScript: String = {
+        let bundle = Bundle(for: HTMLTemplateBundleLocator.self)
+        guard let url = bundle.url(forResource: "katex.min", withExtension: "js"),
+              let data = try? Data(contentsOf: url),
+              let str = String(data: data, encoding: .utf8) else {
+            return ""
+        }
+        return str
+    }()
+
+    static let katexAutoRenderScript: String = {
+        let bundle = Bundle(for: HTMLTemplateBundleLocator.self)
+        guard let url = bundle.url(forResource: "katex-auto-render.min", withExtension: "js"),
+              let data = try? Data(contentsOf: url),
+              let str = String(data: data, encoding: .utf8) else {
+            return ""
+        }
+        return str
+    }()
+
+    static let katexCSS: String = {
+        let bundle = Bundle(for: HTMLTemplateBundleLocator.self)
+        guard let url = bundle.url(forResource: "katex.min", withExtension: "css"),
+              let data = try? Data(contentsOf: url),
+              let str = String(data: data, encoding: .utf8) else {
+            return ""
+        }
+        return str
+    }()
+
     static let mermaidScript: String = {
         let bundle = Bundle(for: HTMLTemplateBundleLocator.self)
         guard let url = bundle.url(forResource: "mermaid.min", withExtension: "js"),
@@ -13,7 +43,7 @@ enum HTMLTemplate {
         return str
     }()
 
-    static func build(frontmatter: String, content: String, hasMermaid: Bool = false) -> String {
+    static func build(frontmatter: String, content: String, hasMermaid: Bool = false, hasMath: Bool = false) -> String {
         let nonce = generateNonce()
         let mermaidTag: String
         if hasMermaid && !mermaidScript.isEmpty {
@@ -28,14 +58,36 @@ enum HTMLTemplate {
         } else {
             mermaidTag = ""
         }
+        let mathTag: String
+        let mathCSS: String
+        if hasMath && !katexScript.isEmpty {
+            mathCSS = katexCSS
+            mathTag = """
+            <script nonce="\(nonce)">
+            \(katexScript)
+            </script>
+            <script nonce="\(nonce)">
+            \(katexAutoRenderScript)
+            </script>
+            <script nonce="\(nonce)">
+            \(katexInitScript)
+            </script>
+            """
+        } else {
+            mathCSS = ""
+            mathTag = ""
+        }
+        // Add font-src data: when math is present (KaTeX fonts are inlined as data: URIs)
+        let fontSrc = hasMath ? " font-src data:;" : ""
         return """
         <!DOCTYPE html>
         <html>
         <head>
         <meta charset="utf-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-\(nonce)'; img-src file: data:;">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-\(nonce)'; img-src file: data:;\(fontSrc)">
         <style>
         \(css)
+        \(mathCSS)
         </style>
         </head>
         <body>
@@ -50,6 +102,7 @@ enum HTMLTemplate {
         document.body.focus();
         </script>
         \(mermaidTag)
+        \(mathTag)
         </body>
         </html>
         """
@@ -692,6 +745,22 @@ enum HTMLTemplate {
                     esc(err && err.message ? err.message : String(err)) + '</div>';
                 cleanup();
             }
+        });
+    })();
+    """
+
+    // MARK: - KaTeX Init Script
+
+    static let katexInitScript = """
+    (function() {
+        if (typeof renderMathInElement === 'undefined') return;
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '\\\\[', right: '\\\\]', display: true},
+                {left: '\\\\(', right: '\\\\)', display: false}
+            ],
+            throwOnError: false
         });
     })();
     """

@@ -15,21 +15,26 @@
 		1B17B07D818F3720DAB1FE11 /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		1D60496746E2DEAFF37A007D /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		22B54D361CF3A0CCDC57E615 /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
+		230894C298C6032C80418FCD /* katex.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 690801C3B192D27E60E4C92C /* katex.min.js */; };
 		2972012E56C82F3E9BCAC450 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
+		2DB024D93E5F5614289B1504 /* katex.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 06719F7618F0B6AE97E9E3FC /* katex.min.css */; };
 		320967416B86EC2279FADFDB /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 011CF5280936C87D3EDE5B10 /* mermaid.min.js */; };
 		32A065CF61146241F2696890 /* FrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A694C150F42F5DDE63F277 /* FrontmatterTests.swift */; };
+		3B7AAE1689A7861D550EC03D /* katex.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 690801C3B192D27E60E4C92C /* katex.min.js */; };
 		42FEF9E61C64676FE49B06DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
 		4443B10326EE7FC58A31536B /* HTMLTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AB33B21266EE578C0F1E19 /* HTMLTemplate.swift */; };
 		46115B7B9E34A4E1B65CA883 /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		4634ABC55D92A1747A914500 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = F46A4EFD9BDD01749AEB38F9 /* Yams */; };
 		484A43C9EF3C9186579A4F4A /* PerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F286B07971A2B4CB87AFDC /* PerformanceTests.swift */; };
 		514A1CBFFDAB6FA237C1237E /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
+		526110CADCD9EDAFEB5F52A4 /* katex.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 690801C3B192D27E60E4C92C /* katex.min.js */; };
 		55079A275F66648D4C827784 /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2D51C2C3AEA2024571B64E49 /* Markdown */; };
 		5AD79E746EE6D9D71A48DB41 /* HTMLTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AB33B21266EE578C0F1E19 /* HTMLTemplate.swift */; };
 		5F1997E59E2E5293FC0B77FE /* HTMLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE95DD3ABC5FB85FBC042DFC /* HTMLConverter.swift */; };
 		617EECD54B15091038FBB5A9 /* MermaidBundleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F6703BF6185B989DE219BD /* MermaidBundleTests.swift */; };
 		705FFD71E42CF39B1EF6D6E5 /* ThumbnailProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F6875AAB40EB94BB71F1E9 /* ThumbnailProvider.swift */; };
 		71D46F12B23DE05D0FFD06A4 /* FrontmatterParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */; };
+		72ED55B85E07C35870EC91B8 /* katex-auto-render.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 0CA62D252D916F79AB63CF28 /* katex-auto-render.min.js */; };
 		738C38ADAFED8A4AFA61382B /* MarkdownRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB6CCDAF7E33E1BF1DC623E /* MarkdownRendererTests.swift */; };
 		77A1A961C292BF21A0AF2351 /* HTMLUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C61AA5A7C3DB57DE9644D56C /* HTMLUtils.swift */; };
 		78538CB2C66FE52F578BDAE1 /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 011CF5280936C87D3EDE5B10 /* mermaid.min.js */; };
@@ -38,13 +43,17 @@
 		9337FDE87D95AD791497113A /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 1347F4184863627EB010F26A /* Markdown */; };
 		95771329738D9CB8EDAD8C91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F131B3758770864BA4688E1D /* Assets.xcassets */; };
 		97507A360517F3591072BB2F /* PreviewMDThumbnail.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D6826AAE447B6F552797261C /* PreviewMDThumbnail.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9853F090B6BE29282ADB5B24 /* katex.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 06719F7618F0B6AE97E9E3FC /* katex.min.css */; };
 		9A044A17CE1F03DE696356E9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF2C10BF661A8F458138B3C1 /* ContentView.swift */; };
 		A05A634F5519036CAD1C622D /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = C59AC12125CCE9C6E7137C46 /* Yams */; };
 		AF4C74231743D9BBE074123D /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 7A446BB7F9FD62DD2E4E2F9B /* Markdown */; };
 		B5E586AFF385CC52B40A6E9E /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = 109A784BFAE5FFAB1C16E4B3 /* Markdown */; };
 		BEB62B9B89F1F120510301CD /* HTMLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE95DD3ABC5FB85FBC042DFC /* HTMLConverter.swift */; };
+		C49EE041183B19DE6449AE4E /* katex.min.css in Resources */ = {isa = PBXBuildFile; fileRef = 06719F7618F0B6AE97E9E3FC /* katex.min.css */; };
 		C53061391ED82B31C6E19394 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = 58CE3FC94799F4C79C5A5F4F /* Yams */; };
+		C86BA5CF2203CA5EDB4464BA /* katex-auto-render.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 0CA62D252D916F79AB63CF28 /* katex-auto-render.min.js */; };
 		CDF8F4229DF34DB30D1C0011 /* PreviewMDApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C226C450B376D8A60EE3A180 /* PreviewMDApp.swift */; };
+		CFB21B3F8A216D7B519BA426 /* katex-auto-render.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 0CA62D252D916F79AB63CF28 /* katex-auto-render.min.js */; };
 		CFD063D3EE18CAD0FD24ED0A /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD950D82DAC3A497A8CF6986 /* MarkdownRenderer.swift */; };
 		D71E79D0799869CDACAE7E96 /* HTMLConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE95DD3ABC5FB85FBC042DFC /* HTMLConverter.swift */; };
 		DB8DC353A0401059130DDA46 /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 011CF5280936C87D3EDE5B10 /* mermaid.min.js */; };
@@ -90,6 +99,8 @@
 
 /* Begin PBXFileReference section */
 		011CF5280936C87D3EDE5B10 /* mermaid.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = mermaid.min.js; sourceTree = "<group>"; };
+		06719F7618F0B6AE97E9E3FC /* katex.min.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = katex.min.css; sourceTree = "<group>"; };
+		0CA62D252D916F79AB63CF28 /* katex-auto-render.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "katex-auto-render.min.js"; sourceTree = "<group>"; };
 		128298E0D85817EAFE1DBE08 /* PreviewMD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PreviewMD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB6CCDAF7E33E1BF1DC623E /* MarkdownRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownRendererTests.swift; sourceTree = "<group>"; };
 		3412D35B106A8ECAFE33A23E /* FrontmatterParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontmatterParser.swift; sourceTree = "<group>"; };
@@ -99,6 +110,7 @@
 		48D257C31A5F1C6D5F91C1D5 /* PreviewMDQuickLook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PreviewMDQuickLook.entitlements; sourceTree = "<group>"; };
 		52440575EFDDE44C1E478115 /* EdgeCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdgeCaseTests.swift; sourceTree = "<group>"; };
 		5E024DEA8EC7564FA12FF8D2 /* PreviewMDQuickLook.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PreviewMDQuickLook.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		690801C3B192D27E60E4C92C /* katex.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = katex.min.js; sourceTree = "<group>"; };
 		6D06D673012E855AA03509D5 /* SecurityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityTests.swift; sourceTree = "<group>"; };
 		7199341AAC078B6346ABCA8F /* PreviewMDTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PreviewMDTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		78F6703BF6185B989DE219BD /* MermaidBundleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MermaidBundleTests.swift; sourceTree = "<group>"; };
@@ -244,6 +256,9 @@
 			isa = PBXGroup;
 			children = (
 				F131B3758770864BA4688E1D /* Assets.xcassets */,
+				0CA62D252D916F79AB63CF28 /* katex-auto-render.min.js */,
+				06719F7618F0B6AE97E9E3FC /* katex.min.css */,
+				690801C3B192D27E60E4C92C /* katex.min.js */,
 				011CF5280936C87D3EDE5B10 /* mermaid.min.js */,
 			);
 			path = Resources;
@@ -393,6 +408,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2972012E56C82F3E9BCAC450 /* Assets.xcassets in Resources */,
+				CFB21B3F8A216D7B519BA426 /* katex-auto-render.min.js in Resources */,
+				9853F090B6BE29282ADB5B24 /* katex.min.css in Resources */,
+				3B7AAE1689A7861D550EC03D /* katex.min.js in Resources */,
 				320967416B86EC2279FADFDB /* mermaid.min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -402,6 +420,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				95771329738D9CB8EDAD8C91 /* Assets.xcassets in Resources */,
+				72ED55B85E07C35870EC91B8 /* katex-auto-render.min.js in Resources */,
+				C49EE041183B19DE6449AE4E /* katex.min.css in Resources */,
+				526110CADCD9EDAFEB5F52A4 /* katex.min.js in Resources */,
 				DB8DC353A0401059130DDA46 /* mermaid.min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -411,6 +432,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				42FEF9E61C64676FE49B06DC /* Assets.xcassets in Resources */,
+				C86BA5CF2203CA5EDB4464BA /* katex-auto-render.min.js in Resources */,
+				2DB024D93E5F5614289B1504 /* katex.min.css in Resources */,
+				230894C298C6032C80418FCD /* katex.min.js in Resources */,
 				78538CB2C66FE52F578BDAE1 /* mermaid.min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

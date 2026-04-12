@@ -424,4 +424,68 @@ final class EdgeCaseTests: XCTestCase {
                        atomically: true, encoding: .utf8)
         print("Written: /tmp/previewmd-mermaid-full.html (\(html.count) chars)")
     }
+
+    // MARK: - Math/LaTeX rendering
+
+    func testRendererInjectsKaTeXWhenDocumentHasMath() {
+        let input = "The equation $$E = mc^2$$ is famous."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertTrue(html.contains("renderMathInElement"),
+                      "Renderer must inject KaTeX when math delimiters present")
+        XCTAssertTrue(html.contains("font-src data:"),
+                      "CSP must include font-src data: for KaTeX fonts")
+    }
+
+    func testRendererOmitsKaTeXForPlainDoc() {
+        let input = "# No math here\n\nJust regular text."
+        let html = MarkdownRenderer.render(input)
+        XCTAssertFalse(html.contains("renderMathInElement"),
+                       "Renderer must not inject KaTeX when no math")
+        XCTAssertFalse(html.contains("font-src"),
+                       "CSP must not include font-src when no math")
+    }
+
+    func testMathDetectionVariousDelimiters() {
+        let cases = [
+            ("display $$", "The result is $$x^2 + y^2$$"),
+            ("inline \\\\(", "The value \\(x\\) is positive"),
+            ("display \\\\[", "We have \\[\\sum_{i=1}^n i\\]"),
+        ]
+        for (name, input) in cases {
+            let html = MarkdownRenderer.render(input)
+            XCTAssertTrue(html.contains("renderMathInElement"),
+                          "Should detect math in \(name)")
+        }
+    }
+
+    func testKaTeXScriptIsLargeEnough() {
+        XCTAssertGreaterThan(HTMLTemplate.katexScript.count, 100_000,
+                             "Vendored katex.min.js must be at least 100 KB")
+    }
+
+    func testKaTeXCSSHasInlinedFonts() {
+        XCTAssertTrue(HTMLTemplate.katexCSS.contains("data:font/woff2;base64,"),
+                      "KaTeX CSS must have inlined woff2 fonts")
+    }
+
+    func testMathFixtureRendersToTmp() throws {
+        let fixture = """
+        # Math Rendering Test
+
+        Inline: The equation $$E = mc^2$$ is famous.
+
+        Display math:
+
+        $$
+        \\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}
+        $$
+
+        Regular text after math.
+        """
+        let html = MarkdownRenderer.render(fixture)
+        XCTAssertTrue(html.contains("renderMathInElement"))
+        let url = URL(fileURLWithPath: "/tmp/previewmd-math-out.html")
+        try html.write(to: url, atomically: true, encoding: .utf8)
+        print("Written: \(url.path) (\(html.count) chars)")
+    }
 }
