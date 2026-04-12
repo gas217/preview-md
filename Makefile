@@ -58,7 +58,7 @@ notarize: sign
 	@ditto -c -k --keepParent "$(APP)" /tmp/PreviewMD-notarize.zip
 	@echo "==> Submitting to Apple..."
 	@xcrun notarytool submit /tmp/PreviewMD-notarize.zip \
-		--keychain-profile "notarytool-preview-md-password" --wait
+		--keychain-profile "notarytool-password" --wait
 	@echo "==> Stapling..."
 	@xcrun stapler staple "$(APP)"
 
