@@ -10,6 +10,10 @@ ASSET_URL="https://github.com/$REPO/releases/latest/download/PreviewMD.tar.gz"
 ETAG_FILE="$HOME/.previewmd-etag"
 DEST="/Applications/PreviewMD.app"
 BUNDLE_ID="com.previewmd.PreviewMD.QuickLook"
+THUMB_ID="com.previewmd.PreviewMD.Thumbnail"
+PLIST_NAME="com.previewmd.updater.plist"
+PLIST_SRC="$DEST/Contents/Resources/$PLIST_NAME"
+PLIST_DST="$HOME/Library/LaunchAgents/$PLIST_NAME"
 
 # Fetch remote ETag via HEAD request
 remote_etag=$(curl -sI -L "$ASSET_URL" 2>/dev/null | grep -i '^etag:' | tail -1 | tr -d '\r' | awk '{print $2}')
@@ -32,9 +36,17 @@ rm -rf "$DEST"
 curl -sL "$ASSET_URL" | tar xz -C /Applications
 xattr -cr "$DEST" 2>/dev/null || true
 
-# Reset Quick Look to pick up the new extension
+# Reset Quick Look to pick up the new extensions
 qlmanage -r >/dev/null 2>&1 || true
 pluginkit -e use -i "$BUNDLE_ID" 2>/dev/null || true
+pluginkit -e use -i "$THUMB_ID" 2>/dev/null || true
+
+# Re-install LaunchAgent plist in case it changed in the new version
+if [ -f "$PLIST_SRC" ]; then
+    launchctl unload "$PLIST_DST" 2>/dev/null || true
+    cp "$PLIST_SRC" "$PLIST_DST"
+    launchctl load "$PLIST_DST"
+fi
 
 # Store new ETag
 echo "$remote_etag" > "$ETAG_FILE"
