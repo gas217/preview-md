@@ -49,20 +49,6 @@
                ReferencedContainer = "container:PreviewMD.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C174B3154442009D61A3D1D7"
-               BuildableName = "PreviewMDThumbnail.appex"
-               BlueprintName = "PreviewMDThumbnail"
-               ReferencedContainer = "container:PreviewMD.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

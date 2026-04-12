@@ -8,7 +8,6 @@ MERMAID_PROV = Resources/mermaid-source.txt
 DERIVED = build
 APP = $(DERIVED)/Build/Products/Release/PreviewMD.app
 EXT = $(APP)/Contents/PlugIns/PreviewMDQuickLook.appex
-THUMB = $(APP)/Contents/PlugIns/PreviewMDThumbnail.appex
 SIGN_ID = Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)
 BUNDLE_ID = com.previewmd.PreviewMD.QuickLook
 VERSION = $(shell /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" App/Info.plist 2>/dev/null || echo "1.0.0")
@@ -36,8 +35,6 @@ sign: build
 	@echo "==> Signing..."
 	@codesign --force --options runtime --sign "$(SIGN_ID)" \
 		--entitlements Extension/PreviewMDQuickLook.entitlements "$(EXT)"
-	@codesign --force --options runtime --sign "$(SIGN_ID)" \
-		--entitlements Thumbnail/PreviewMDThumbnail.entitlements "$(THUMB)"
 	@codesign --force --options runtime --sign "$(SIGN_ID)" \
 		--entitlements App/PreviewMD.entitlements "$(APP)"
 
