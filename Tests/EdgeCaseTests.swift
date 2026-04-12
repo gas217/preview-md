@@ -2,12 +2,6 @@ import XCTest
 
 final class EdgeCaseTests: XCTestCase {
 
-    private func bodyHTML(_ html: String) -> String {
-        guard let start = html.range(of: "<article class=\"markdown-body\">"),
-              let end = html.range(of: "</article>") else { return html }
-        return String(html[start.upperBound..<end.lowerBound])
-    }
-
     // MARK: - Heading with inline formatting
 
     func testHeadingWithBold() {
