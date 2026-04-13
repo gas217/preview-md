@@ -67,7 +67,7 @@ notarize: sign
 release: notarize
 	@echo "==> Packaging v$(VERSION)..."
 	@tar -czf /tmp/PreviewMD.tar.gz -C $(DERIVED)/Build/Products/Release PreviewMD.app
-	@gh release create "v$(VERSION)" /tmp/PreviewMD.tar.gz \
+	@gh release create "v$(VERSION)" /tmp/PreviewMD.tar.gz install.sh \
 		--title "PreviewMD v$(VERSION)" --notes "Quick Look previews for Markdown files"
 	@echo "==> Released v$(VERSION)"
 
