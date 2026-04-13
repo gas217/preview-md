@@ -28,10 +28,12 @@ test:
 	@xcrun xctest $(DERIVED)/Build/Products/Debug/PreviewMDTests.xctest
 
 sign: build
-	@echo "==> Bundling updater scripts..."
+	@echo "==> Bundling scripts..."
 	@cp scripts/check-update.sh "$(APP)/Contents/Resources/"
 	@cp scripts/com.previewmd.updater.plist "$(APP)/Contents/Resources/"
+	@cp scripts/uninstall.sh "$(APP)/Contents/Resources/"
 	@chmod +x "$(APP)/Contents/Resources/check-update.sh"
+	@chmod +x "$(APP)/Contents/Resources/uninstall.sh"
 	@echo "==> Signing..."
 	@codesign --force --options runtime --sign "$(SIGN_ID)" \
 		--entitlements Extension/PreviewMDQuickLook.entitlements "$(EXT)"
