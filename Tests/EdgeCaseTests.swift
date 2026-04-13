@@ -505,4 +505,55 @@ final class EdgeCaseTests: XCTestCase {
         XCTAssertTrue(html.contains("renderMathInElement"),
                       "Document with both prices and math should detect the math")
     }
+
+    // MARK: - Image rendering E2E
+
+    func testImageFixtureRenders() throws {
+        let path = URL(fileURLWithPath: #file)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("TestFiles/image-test.md")
+        guard FileManager.default.fileExists(atPath: path.path) else {
+            throw XCTSkip("TestFiles/image-test.md not found relative to \(#file)")
+        }
+        let html = try MarkdownRenderer.render(fileAt: path)
+        let body = bodyHTML(html)
+
+        // Data URI images preserved
+        XCTAssertTrue(body.contains("data:image/png;base64,"),
+                      "Data URI images must be preserved")
+
+        // Alt text rendered
+        XCTAssertTrue(body.contains("alt=\"Red dot\""),
+                      "Alt text must be rendered")
+        XCTAssertTrue(body.contains("alt=\"Alt text for image\""),
+                      "Alt text on titled image must be rendered")
+
+        // Title attribute rendered
+        XCTAssertTrue(body.contains("title=\"Image title attribute\""),
+                      "Title attribute must be rendered")
+
+        // Lazy loading present
+        XCTAssertTrue(body.contains("loading=\"lazy\""),
+                      "Images should have lazy loading")
+
+        // Remote https image should be rendered as <img> tag (CSP blocks loading, not the HTML)
+        XCTAssertTrue(body.contains("src=\"https://example.com/image.png\""),
+                      "Remote image src preserved in HTML (CSP blocks at load time)")
+
+        // CSP blocks remote images at runtime (img-src only allows file: and data:)
+        XCTAssertTrue(html.contains("img-src file: data:"),
+                      "CSP must restrict img-src to file: and data:")
+        XCTAssertFalse(html.contains("img-src file: data: https:"),
+                       "CSP must not allow https: images")
+
+        // Trailing text survives
+        XCTAssertTrue(body.contains("Text after images should render normally."),
+                      "Trailing text must not be swallowed")
+
+        // Write to /tmp for browser verification
+        try html.write(to: URL(fileURLWithPath: "/tmp/previewmd-image-test.html"),
+                       atomically: true, encoding: .utf8)
+        print("Written: /tmp/previewmd-image-test.html (\(html.count) chars)")
+    }
 }

@@ -3,7 +3,7 @@ import XCTest
 /// Writes rendered HTML to /tmp for manual visual inspection
 final class RenderOutputTest: XCTestCase {
     func testWriteRenderOutput() throws {
-        for name in ["example", "frontmatter_task", "large_test", "mermaid-sample"] {
+        for name in ["example", "frontmatter_task", "large_test", "mermaid-sample", "image-test"] {
             let path = URL(fileURLWithPath: #file)
                 .deletingLastPathComponent()
                 .deletingLastPathComponent()
