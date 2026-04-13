@@ -7,7 +7,7 @@ Press spacebar on a `.md` file in Finder and see frontmatter rendered as a clean
 ## Install
 
 ```bash
-curl -sSL github.com/gas217/preview-md/releases/latest/download/install.sh | sh
+curl -sSL https://github.com/gas217/preview-md/releases/latest/download/install.sh | sh
 ```
 
 This installs PreviewMD to `/Applications`, registers the Quick Look extension, and sets up automatic updates.
