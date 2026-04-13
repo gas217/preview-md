@@ -57,8 +57,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.previewmd.PreviewMD
         PRODUCT_NAME: PreviewMD
-        MARKETING_VERSION: "1.2.0"
-        CURRENT_PROJECT_VERSION: "3"
+        MARKETING_VERSION: "1.3.0"
+        CURRENT_PROJECT_VERSION: "4"
         INFOPLIST_FILE: App/Info.plist
         CODE_SIGN_ENTITLEMENTS: App/PreviewMD.entitlements
         CODE_SIGN_IDENTITY: "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)"
@@ -85,8 +85,8 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.previewmd.PreviewMD.QuickLook
         PRODUCT_NAME: PreviewMDQuickLook
-        MARKETING_VERSION: "1.2.0"
-        CURRENT_PROJECT_VERSION: "3"
+        MARKETING_VERSION: "1.3.0"
+        CURRENT_PROJECT_VERSION: "4"
         INFOPLIST_FILE: Extension/Info.plist
         CODE_SIGN_ENTITLEMENTS: Extension/PreviewMDQuickLook.entitlements
         CODE_SIGN_IDENTITY: "Developer ID Application: AZAT SHAMILEVICH GAYNUTDINOV (LY8G872X5U)"
