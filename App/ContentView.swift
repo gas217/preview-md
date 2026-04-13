@@ -6,84 +6,73 @@ struct ContentView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Header
-            VStack(spacing: 8) {
-                Image(nsImage: NSApp.applicationIconImage)
-                    .resizable()
-                    .frame(width: 80, height: 80)
-                Text("PreviewMD")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                Text("Quick Look previews for Markdown files")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(.bottom, 20)
-
-            Divider().padding(.horizontal, 24)
-
-            // Status
-            VStack(spacing: 12) {
-                StatusRow(
-                    icon: extensionEnabled ? "checkmark.circle.fill" : "exclamationmark.triangle.fill",
-                    color: extensionEnabled ? .green : .orange,
-                    title: extensionEnabled ? "Extension enabled" : "Extension not detected",
-                    action: ("Open Settings", {
-                        if let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    })
+            // Hero: animated GIF showing preview in action
+            AnimatedGIFView(name: "preview-demo")
+                .frame(height: 280)
+                .clipped()
+                .overlay(
+                    LinearGradient(colors: [.clear, Color(nsColor: .windowBackgroundColor)],
+                                   startPoint: .top, endPoint: .bottom)
+                        .frame(height: 40),
+                    alignment: .bottom
                 )
 
-                StatusRow(
-                    icon: updaterActive ? "arrow.triangle.2.circlepath.circle.fill" : "arrow.triangle.2.circlepath.circle",
-                    color: updaterActive ? .blue : .secondary,
-                    title: updaterActive ? "Auto-updates active (every 5 min)" : "Auto-updater not installed",
-                    action: updaterActive ? ("Check Now", {
-                        checkForUpdateNow()
-                    }) : nil
-                )
+            VStack(spacing: 16) {
+                // Title
+                HStack(spacing: 10) {
+                    Image(nsImage: NSApp.applicationIconImage)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("PreviewMD")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        Text("Quick Look for Markdown")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                // Status
+                VStack(spacing: 8) {
+                    StatusRow(
+                        icon: extensionEnabled ? "checkmark.circle.fill" : "exclamationmark.triangle.fill",
+                        color: extensionEnabled ? .green : .orange,
+                        title: extensionEnabled ? "Extension enabled" : "Extension not detected",
+                        action: ("Open Settings", {
+                            if let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        })
+                    )
+
+                    StatusRow(
+                        icon: updaterActive ? "arrow.triangle.2.circlepath.circle.fill" : "arrow.triangle.2.circlepath.circle",
+                        color: updaterActive ? .blue : .secondary,
+                        title: updaterActive ? "Auto-updates active" : "Auto-updater not installed",
+                        action: updaterActive ? ("Check Now", { checkForUpdateNow() }) : nil
+                    )
+                }
+
+                Divider()
+
+                // How to use — just the essentials
+                HStack(spacing: 20) {
+                    Tip(key: "Space", text: "Preview")
+                    Tip(key: "⌥Space", text: "Full screen")
+                    Tip(key: "↑↓", text: "Scroll")
+                }
+
+                Spacer()
+
+                Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")")
+                    .font(.caption2)
+                    .foregroundStyle(.quaternary)
             }
-            .padding(.vertical, 16)
             .padding(.horizontal, 24)
-
-            Divider().padding(.horizontal, 24)
-
-            // Features
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Features")
-                    .font(.headline)
-                    .padding(.bottom, 2)
-                FeatureRow(text: "GFM tables, task lists, strikethrough, autolinks, admonitions")
-                FeatureRow(text: "Mermaid diagrams rendered as SVG (local, no network)")
-                FeatureRow(text: "Syntax highlighting for 14 languages")
-                FeatureRow(text: "YAML frontmatter as structured metadata")
-                FeatureRow(text: "Dark mode + keyboard scrolling")
-            }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 24)
-
-            Divider().padding(.horizontal, 24)
-
-            // Keyboard shortcuts
-            VStack(alignment: .leading, spacing: 8) {
-                Tip(key: "Space", text: "Preview any .md file in Finder")
-                Tip(key: "⌥ Space", text: "Full-screen preview")
-                Tip(key: "↑↓ PgUp PgDn", text: "Scroll")
-            }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 24)
-
-            Spacer()
-
-            Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0")")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-                .padding(.bottom, 8)
+            .padding(.bottom, 12)
         }
-        .padding(.top, 24)
-        .padding(.horizontal, 8)
-        .frame(minWidth: 420, idealWidth: 480, minHeight: 520, idealHeight: 600)
+        .frame(width: 420, height: 520)
         .onAppear {
             extensionEnabled = checkExtensionEnabled()
             updaterActive = checkUpdaterActive()
@@ -119,6 +108,28 @@ struct ContentView: View {
     }
 }
 
+// MARK: - Animated GIF View
+
+struct AnimatedGIFView: NSViewRepresentable {
+    let name: String
+
+    func makeNSView(context: Context) -> NSImageView {
+        let imageView = NSImageView()
+        imageView.animates = true
+        imageView.imageScaling = .scaleProportionallyUpOrDown
+        imageView.canDrawSubviewsIntoLayer = true
+        if let url = Bundle.main.url(forResource: name, withExtension: "gif"),
+           let image = NSImage(contentsOf: url) {
+            imageView.image = image
+        }
+        return imageView
+    }
+
+    func updateNSView(_ nsView: NSImageView, context: Context) {}
+}
+
+// MARK: - Components
+
 struct StatusRow: View {
     let icon: String
     let color: Color
@@ -129,7 +140,7 @@ struct StatusRow: View {
         HStack {
             Image(systemName: icon)
                 .foregroundStyle(color)
-                .frame(width: 20)
+                .frame(width: 18)
             Text(title)
                 .font(.callout)
             Spacer()
@@ -142,35 +153,21 @@ struct StatusRow: View {
     }
 }
 
-struct FeatureRow: View {
-    let text: String
-
-    var body: some View {
-        HStack(alignment: .top, spacing: 8) {
-            Text("·")
-                .foregroundStyle(.secondary)
-            Text(text)
-                .font(.callout)
-                .foregroundStyle(.secondary)
-        }
-    }
-}
-
 struct Tip: View {
     let key: String
     let text: String
 
     var body: some View {
-        HStack(spacing: 12) {
+        VStack(spacing: 4) {
             Text(key)
                 .font(.system(size: 11, weight: .medium, design: .rounded))
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
                 .background(.quaternary)
                 .cornerRadius(5)
-                .fixedSize()
             Text(text)
-                .font(.callout)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 }
